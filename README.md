@@ -4,7 +4,7 @@ Repositório de **RKRShell**
 
 Criado por Kaê Angeli Coutinho, Ricardo Oliete Ogata e Rafael Hieda
 
-_GNU GPL_
+_GNU GPL V2_
 
 ## Introdução
 
