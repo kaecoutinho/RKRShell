@@ -12,4 +12,4 @@ _GNU GPL V2_
 
 Contando também com um módulo de reconhecimento de voz, é possível controlar a linha de comando apenas dizendo os comandos desejados para o interpretador  
 
-_Flex & Bison_ são os principais recursos utilizados nesse projeto, assim como toda a programação é feita em _linguagem C_
+_Flex & Bison_ são os principais recursos utilizados nesse projeto, assim como toda a programação é feita em _linguagem C/C++_
