@@ -8,7 +8,7 @@ _GNU GPL V2_
 
 ## Introdução
 
-**RKRShell** é um projeto envolvendo _Linguagens Formais e Autômatos_, cujo objetivo é simular um pequeno interpretador de linha de comando capaz de ser executado em ambientes Unix e Windows
+**RKRShell** é um projeto envolvendo _Linguagens Formais e Autômatos_, cujo objetivo é simular um pequeno interpretador de linha de comando capaz de ser executado em ambientes _Unix_ e _Windows_
 
 Contando também com um módulo de reconhecimento de voz, é possível controlar a linha de comando apenas dizendo os comandos desejados para o interpretador  
 
