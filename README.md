@@ -6,7 +6,7 @@ Criado por Kaê Angeli Coutinho, Ricardo Oliete Ogata e Rafael Hieda
 
 _GNU GPL_
 
-## Introdução
+### Introdução
 
 **RKRShell** é um projeto envolvendo _Linguagens Formais e Autômatos_, cujo objetivo é simular um pequeno interpretador de linha de comando capaz de ser executado em ambientes Unix e Windows
 
