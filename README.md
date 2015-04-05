@@ -12,4 +12,4 @@ _GNU GPL V2_
 
 A speech recognition module is also included in the project which makes it possible to control the interpreter just by saying its commands using your own voice.
 
-_Flex & Bison_ are the major used resources within this project. _C/C++_ was the mostly used programming language to develop such a projetc.
+_Flex & Bison_ are the major used resources within this project. _C/C++_ is the mostly used programming language within this project development.
