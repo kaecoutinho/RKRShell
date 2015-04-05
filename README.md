@@ -1,15 +1,15 @@
 # RKRShell
 
-Repositório de **RKRShell**
+**RKRShell**'s repository
 
-Criado por Kaê Angeli Coutinho, Ricardo Oliete Ogata e Rafael Hieda
+Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda
 
 _GNU GPL V2_
 
-## Introdução
+## Introduction
 
-**RKRShell** é um projeto envolvendo _Linguagens Formais e Autômatos_, cujo objetivo é simular um pequeno interpretador de linha de comando capaz de ser executado em ambientes _Unix_ e _Windows_
+**RKRShell** is a _Formal Languages and Automata Theory_ class project which is basically a command-line interpreter that can be executed in both _Unix_ and _Windows_ operating systems.
 
-Contando também com um módulo de reconhecimento de voz, é possível controlar a linha de comando apenas dizendo os comandos desejados para o interpretador  
+A speech recognition module is also included in the project which makes it possible to control the interpreter just by saying its commands using your own voice.
 
-_Flex & Bison_ são os principais recursos utilizados nesse projeto, assim como toda a programação é feita em _linguagem C/C++_
+_Flex & Bison_ are the major used resources within this project. _C/C++_ was the mostly used programming language to develop such a projetc.
