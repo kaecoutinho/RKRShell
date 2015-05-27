@@ -6,10 +6,13 @@
 
     #include <cstdio>
     #include <iostream>
+    #include <fstream>
     #include <iomanip>
     #include <string>
+    #include <sstream>
     #include <cstring>
     #include <unistd.h>
+    #include <time.h>
     #define EXIT_SUCCESS 0
     #define EXIT_ERROR 1
     #define OS_WINDOWS 0
@@ -22,6 +25,7 @@
     #define RCOMANDS_ARRAY_SIZE 10
     #define EQUAL_STRING 0
     #define EMPTY_STRING ""
+    #define LOG_FILE_NAME "RKRLog.log"
 
     // OS detection
     #if (defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined __WIN32__ || defined __WINDOWS__)
@@ -35,6 +39,7 @@
     // Default namespace
     using namespace std;
 
+    //
     typedef struct recentCommands
     {
         char ** data;
@@ -60,7 +65,10 @@
     bool isCurrentOSWindows();
     bool isCurrentOSMacOS();
     bool isCurrentOSLinux();
-    void initializeLogFile(fstream * logFile);
+    void initializeLogFile(fstream & logFile);
+    void logCommandToFile(char * command, fstream & logFile);
+    void logErrorToFile(char * error, fstream & logfile);
+    string getCurrentDate();
     void initializeRecentCommands(recentCommands * instance, int size);
     char * getRecentCommands(recentCommands instance);
     bool recentCommandsNeedShift(recentCommands instance);
@@ -83,14 +91,15 @@
 %token CD
 %token PWD
 %token MKDIR
-%token <stringValue> UNIX_OPTIONS
-%token <stringValue> FILE_NAME
+%token RM
 %token RCOMMANDS
 %token HELP
 %token CLEAR
 %token NEW_LINE
 %token EXIT
 %token QUIT
+%token <stringValue> UNIX_OPTIONS
+%token <stringValue> FILE_NAME
 
 %%
 // Productions (a.k.a. P or R set)
@@ -103,15 +112,17 @@ command:
     LS NEW_LINE
     {
         char * command = "ls";
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | LS UNIX_OPTIONS NEW_LINE
     {
         char * command = strcat("ls ",$2);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | LS UNIX_OPTIONS FILE_NAME NEW_LINE
@@ -119,52 +130,59 @@ command:
         char * aux = strcat(strdup("ls "),$2);
         aux = strcat(aux,strdup(" "));
         char * command = strcat(aux,$3);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | LS FILE_NAME NEW_LINE
     {
         char * command = strcat(strdup("ls "),$2);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | CD NEW_LINE
     {
         char * command = "cd";
-        addRecentCommand(command,&rcomands);
         system(command);
         chdir(strcat(strdup("/Users/"),getenv(USER_ENVIRONMENT_VARIABLE)));
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | CD FILE_NAME NEW_LINE
     {
         char * command = strcat(strdup("cd "),$2);
-        addRecentCommand(command,&rcomands);
         system(command);
         chdir($2);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | PWD NEW_LINE
     {   
         char * command = "pwd";
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | PWD UNIX_OPTIONS NEW_LINE
     {
         char * command = strcat(strdup("pwd "),$2);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | MKDIR FILE_NAME NEW_LINE
     {
         char * command = strcat(strdup("mkdir "),$2);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | MKDIR UNIX_OPTIONS FILE_NAME NEW_LINE
@@ -172,27 +190,51 @@ command:
         char * aux = strcat(strdup("mkdir "),$2);
         aux = strcat(aux,strdup(" "));
         char * command = strcat(aux,$3);
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
+    | RM FILE_NAME NEW_LINE
+    {
+        char * command = strcat(strdup("rm "),$2);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
+    | RM UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        char * aux = strcat(strdup("rm "),$2);
+        aux = strcat(aux,strdup(" "));
+        char * command = strcat(aux,$3);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | RCOMMANDS NEW_LINE
     {
-        addRecentCommand("rcommands",&rcomands);
+        char * command = "rcommands";
+        addRecentCommand(command,&rcomands);
         cout << getRecentCommands(rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | HELP NEW_LINE
     {
+        char * command = "help";
         cout << "YET TO IMPLEMENT" << endl;
-        addRecentCommand("help",&rcomands);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | CLEAR NEW_LINE
     {
         char * command = "clear";
-        addRecentCommand(command,&rcomands);
         system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | NEW_LINE
@@ -201,12 +243,16 @@ command:
     }
     | EXIT NEW_LINE
     {
+        char * command = "exit";
         dealloc();
+        logCommandToFile(command,logFile);
         return EXIT_SUCCESS;
     }
     | QUIT NEW_LINE
     {
+        char * command = "quit";
         dealloc();
+        logCommandToFile(command,logFile);
         return EXIT_SUCCESS;
     }
 %%
@@ -224,12 +270,14 @@ int main(int argumentsCount, char ** argumentsList)
 void setup()
 {
     initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
+    initializeLogFile(logFile);
 }
 
 //
 void dealloc()
 {
     destroyRecentCommands(&rcomands);
+    logFile.close();
 }
 
 //
@@ -264,9 +312,57 @@ bool isCurrentOSLinux()
 }
 
 //
-void initializeLogFile(fstream * logFile)
+void initializeLogFile(fstream & logFile)
 {
+    logFile.open(LOG_FILE_NAME,fstream::out | std::ios_base::app);
+}
 
+//
+void logCommandToFile(char * command, fstream & logFile)
+{
+    logFile << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
+}
+
+//
+void logErrorToFile(char * error, fstream & logfile)
+{
+    logFile << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
+}
+
+//
+string getCurrentDate()
+{
+    time_t rawTime;
+    struct tm * timeInfo;
+    ostringstream aux;
+    rawTime = time(NULL);
+    timeInfo = localtime(&rawTime);
+    aux << timeInfo->tm_mday << "/" << timeInfo->tm_mon + 1 << "/" << timeInfo->tm_year + 1900 << " @ ";
+    if(timeInfo->tm_hour < 10)
+    {
+        aux << "0" << timeInfo->tm_hour << ":";
+    }
+    else
+    {
+        aux << timeInfo->tm_hour << ":";
+    }
+    if(timeInfo->tm_min < 10)
+    {
+        aux << "0" << timeInfo->tm_min << ":";
+    }
+    else
+    {
+        aux << timeInfo->tm_min << ":";
+    }
+    if(timeInfo->tm_sec < 10)
+    {
+        aux << "0" << timeInfo->tm_sec;
+    }
+    else
+    {
+        aux << timeInfo->tm_sec;
+    }
+    return aux.str();
 }
 
 //
@@ -339,6 +435,7 @@ void destroyRecentCommands(recentCommands * instance)
 //
 void yyerror(const char * errorMessage)
 {
-    cout << "EEK, parse error!  Message: " << errorMessage << endl;
+    cout << "Unrecognizable command detected, exiting now" << endl;
+    logErrorToFile(errorMessage,logFile);
     exit(EXIT_ERROR);
 }

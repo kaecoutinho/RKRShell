@@ -107,10 +107,13 @@
 
     #include <cstdio>
     #include <iostream>
+    #include <fstream>
     #include <iomanip>
     #include <string>
+    #include <sstream>
     #include <cstring>
     #include <unistd.h>
+    #include <time.h>
     #define EXIT_SUCCESS 0
     #define EXIT_ERROR 1
     #define OS_WINDOWS 0
@@ -123,6 +126,7 @@
     #define RCOMANDS_ARRAY_SIZE 10
     #define EQUAL_STRING 0
     #define EMPTY_STRING ""
+    #define LOG_FILE_NAME "RKRLog.log"
 
     // OS detection
     #if (defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined __WIN32__ || defined __WINDOWS__)
@@ -136,6 +140,7 @@
     // Default namespace
     using namespace std;
 
+    //
     typedef struct recentCommands
     {
         char ** data;
@@ -151,6 +156,7 @@
     // global variables
     recentCommands rcomands;
     char operationBuffer[OPERATION_BUFFER_SIZE];
+    fstream logFile;
 
     // Function prototypes
     void setup();
@@ -160,6 +166,10 @@
     bool isCurrentOSWindows();
     bool isCurrentOSMacOS();
     bool isCurrentOSLinux();
+    void initializeLogFile(fstream & logFile);
+    void logCommandToFile(char * command, fstream & logFile);
+    void logErrorToFile(char * error, fstream & logfile);
+    string getCurrentDate();
     void initializeRecentCommands(recentCommands * instance, int size);
     char * getRecentCommands(recentCommands instance);
     bool recentCommandsNeedShift(recentCommands instance);
@@ -189,14 +199,14 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 73 "RKRCommands.y"
+#line 83 "RKRCommands.y"
 {
     int integerValue;
     float floatValue;
     char * stringValue;
 }
 /* Line 193 of yacc.c.  */
-#line 200 "RKRCommands.tab.c"
+#line 210 "RKRCommands.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -209,7 +219,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 213 "RKRCommands.tab.c"
+#line 223 "RKRCommands.tab.c"
 
 #ifdef short
 # undef short
@@ -498,8 +508,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    97,    97,    98,   101,   108,   115,   124,   131,   139,
-     147,   154,   161,   168,   177,   183,   189,   196,   200,   205
+       0,   107,   107,   108,   111,   119,   126,   135,   142,   150,
+     158,   165,   172,   179,   188,   194,   200,   207,   211,   216
 };
 #endif
 
@@ -1417,17 +1427,18 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 102 "RKRCommands.y"
+#line 112 "RKRCommands.y"
     {
         char * command = "ls";
         addRecentCommand(command,&rcomands);
         system(command);
+        logCommandToFile(command,logFile);
         showInput();
     ;}
     break;
 
   case 5:
-#line 109 "RKRCommands.y"
+#line 120 "RKRCommands.y"
     {
         char * command = strcat("ls ",(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1437,7 +1448,7 @@ yyreduce:
     break;
 
   case 6:
-#line 116 "RKRCommands.y"
+#line 127 "RKRCommands.y"
     {
         char * aux = strcat(strdup("ls "),(yyvsp[(2) - (4)].stringValue));
         aux = strcat(aux,strdup(" "));
@@ -1449,7 +1460,7 @@ yyreduce:
     break;
 
   case 7:
-#line 125 "RKRCommands.y"
+#line 136 "RKRCommands.y"
     {
         char * command = strcat(strdup("ls "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1459,7 +1470,7 @@ yyreduce:
     break;
 
   case 8:
-#line 132 "RKRCommands.y"
+#line 143 "RKRCommands.y"
     {
         char * command = "cd";
         addRecentCommand(command,&rcomands);
@@ -1470,7 +1481,7 @@ yyreduce:
     break;
 
   case 9:
-#line 140 "RKRCommands.y"
+#line 151 "RKRCommands.y"
     {
         char * command = strcat(strdup("cd "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1481,7 +1492,7 @@ yyreduce:
     break;
 
   case 10:
-#line 148 "RKRCommands.y"
+#line 159 "RKRCommands.y"
     {   
         char * command = "pwd";
         addRecentCommand(command,&rcomands);
@@ -1491,7 +1502,7 @@ yyreduce:
     break;
 
   case 11:
-#line 155 "RKRCommands.y"
+#line 166 "RKRCommands.y"
     {
         char * command = strcat(strdup("pwd "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1501,7 +1512,7 @@ yyreduce:
     break;
 
   case 12:
-#line 162 "RKRCommands.y"
+#line 173 "RKRCommands.y"
     {
         char * command = strcat(strdup("mkdir "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1511,7 +1522,7 @@ yyreduce:
     break;
 
   case 13:
-#line 169 "RKRCommands.y"
+#line 180 "RKRCommands.y"
     {
         char * aux = strcat(strdup("mkdir "),(yyvsp[(2) - (4)].stringValue));
         aux = strcat(aux,strdup(" "));
@@ -1523,7 +1534,7 @@ yyreduce:
     break;
 
   case 14:
-#line 178 "RKRCommands.y"
+#line 189 "RKRCommands.y"
     {
         addRecentCommand("rcommands",&rcomands);
         cout << getRecentCommands(rcomands);
@@ -1532,7 +1543,7 @@ yyreduce:
     break;
 
   case 15:
-#line 184 "RKRCommands.y"
+#line 195 "RKRCommands.y"
     {
         cout << "YET TO IMPLEMENT" << endl;
         addRecentCommand("help",&rcomands);
@@ -1541,7 +1552,7 @@ yyreduce:
     break;
 
   case 16:
-#line 190 "RKRCommands.y"
+#line 201 "RKRCommands.y"
     {
         char * command = "clear";
         addRecentCommand(command,&rcomands);
@@ -1551,14 +1562,14 @@ yyreduce:
     break;
 
   case 17:
-#line 197 "RKRCommands.y"
+#line 208 "RKRCommands.y"
     {
         showInput();
     ;}
     break;
 
   case 18:
-#line 201 "RKRCommands.y"
+#line 212 "RKRCommands.y"
     {
         dealloc();
         return EXIT_SUCCESS;
@@ -1566,7 +1577,7 @@ yyreduce:
     break;
 
   case 19:
-#line 206 "RKRCommands.y"
+#line 217 "RKRCommands.y"
     {
         dealloc();
         return EXIT_SUCCESS;
@@ -1575,7 +1586,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1579 "RKRCommands.tab.c"
+#line 1590 "RKRCommands.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1789,7 +1800,7 @@ yyreturn:
 }
 
 
-#line 210 "RKRCommands.y"
+#line 221 "RKRCommands.y"
 
 
 // Shell lifecycle
@@ -1805,12 +1816,14 @@ int main(int argumentsCount, char ** argumentsList)
 void setup()
 {
     initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
+    initializeLogFile(logFile);
 }
 
 //
 void dealloc()
 {
     destroyRecentCommands(&rcomands);
+    logFile.close();
 }
 
 //
@@ -1842,6 +1855,68 @@ bool isCurrentOSMacOS()
 bool isCurrentOSLinux()
 {
     return (CURRENT_OS == OS_LINUX);
+}
+
+//
+void initializeLogFile(fstream & logFile)
+{
+    logFile.open(LOG_FILE_NAME,fstream::out | std::ios_base::app);
+    if(logFile.is_open())
+    {
+        cout << "CHARGED!!!";
+    }
+    else
+    {
+        cout << "OPPPPPS!";
+    }
+}
+
+//
+void logCommandToFile(char * command, fstream & logFile)
+{
+    logFile << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
+}
+
+//
+void logErrorToFile(char * error, fstream & logfile)
+{
+    logFile << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
+}
+
+//
+string getCurrentDate()
+{
+    time_t rawTime;
+    struct tm * timeInfo;
+    ostringstream aux;
+    rawTime = time(NULL);
+    timeInfo = localtime(&rawTime);
+    aux << timeInfo->tm_mday << "/" << timeInfo->tm_mon + 1 << "/" << timeInfo->tm_year + 1900 << " @ ";
+    if(timeInfo->tm_hour < 10)
+    {
+        aux << "0" << timeInfo->tm_hour << ":";
+    }
+    else
+    {
+        aux << timeInfo->tm_hour << ":";
+    }
+    if(timeInfo->tm_min < 10)
+    {
+        aux << "0" << timeInfo->tm_min << ":";
+    }
+    else
+    {
+        aux << timeInfo->tm_min << ":";
+    }
+    if(timeInfo->tm_sec < 10)
+    {
+        aux << "0" << timeInfo->tm_sec;
+    }
+    else
+    {
+        aux << timeInfo->tm_sec;
+    }
+    return aux.str();
 }
 
 //

@@ -26,6 +26,9 @@
 "mkdir"							{
 									return MKDIR;
 								}
+"rm"							{
+									return RM;
+								}
 "rcommands"						{
 									return RCOMMANDS;
 								}
