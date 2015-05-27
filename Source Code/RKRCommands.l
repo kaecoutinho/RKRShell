@@ -12,6 +12,7 @@
     // Default namespace
     using namespace std;
 %}
+
 %%
 [ \t]							;
 "ls"							{
@@ -28,6 +29,12 @@
 								}
 "rm"							{
 									return RM;
+								}
+"touch"							{
+									return TOUCH;
+								}
+"date"							{
+									return DATE;
 								}
 "rcommands"						{
 									return RCOMMANDS;

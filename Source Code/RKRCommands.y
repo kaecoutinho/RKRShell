@@ -92,6 +92,8 @@
 %token PWD
 %token MKDIR
 %token RM
+%token TOUCH
+%token DATE
 %token RCOMMANDS
 %token HELP
 %token CLEAR
@@ -213,6 +215,40 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
+    | TOUCH FILE_NAME NEW_LINE
+    {
+        char * command = strcat(strdup("touch "),$2);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
+    | TOUCH UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        char * aux = strcat(strdup("touch "),$2);
+        aux = strcat(aux,strdup(" "));
+        char * command = strcat(aux,$3);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
+    | DATE NEW_LINE
+    {
+        char * command = "date";
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
+    | DATE UNIX_OPTIONS NEW_LINE
+    {
+        char * command = strcat(strdup("date "),$2);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
+    }
     | RCOMMANDS NEW_LINE
     {
         char * command = "rcommands";
@@ -290,7 +326,7 @@ void showWelcomeMessage()
 //
 void showInput()
 {
-    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " " << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << " $>> ";
+    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] $>> ";
 }
 
 //
@@ -326,7 +362,7 @@ void logCommandToFile(char * command, fstream & logFile)
 //
 void logErrorToFile(char * error, fstream & logfile)
 {
-    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << "[" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
+    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
 }
 
 //
@@ -416,6 +452,7 @@ void shiftRecentCommands(recentCommands * instance)
     }
 }
 
+//
 void addRecentCommand(char * command, recentCommands * instance)
 {
     if(recentCommandsNeedShift((*instance)))
