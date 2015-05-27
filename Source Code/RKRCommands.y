@@ -50,6 +50,7 @@
     // global variables
     recentCommands rcomands;
     char operationBuffer[OPERATION_BUFFER_SIZE];
+    fstream logFile;
 
     // Function prototypes
     void setup();
@@ -59,6 +60,7 @@
     bool isCurrentOSWindows();
     bool isCurrentOSMacOS();
     bool isCurrentOSLinux();
+    void initializeLogFile(fstream * logFile);
     void initializeRecentCommands(recentCommands * instance, int size);
     char * getRecentCommands(recentCommands instance);
     bool recentCommandsNeedShift(recentCommands instance);
@@ -160,11 +162,19 @@ command:
     }
     | MKDIR FILE_NAME NEW_LINE
     {
-
+        char * command = strcat(strdup("mkdir "),$2);
+        addRecentCommand(command,&rcomands);
+        system(command);
+        showInput();
     }
     | MKDIR UNIX_OPTIONS FILE_NAME NEW_LINE
     {
-        
+        char * aux = strcat(strdup("mkdir "),$2);
+        aux = strcat(aux,strdup(" "));
+        char * command = strcat(aux,$3);
+        addRecentCommand(command,&rcomands);
+        system(command);
+        showInput();
     }
     | RCOMMANDS NEW_LINE
     {
@@ -174,7 +184,7 @@ command:
     }
     | HELP NEW_LINE
     {
-        // YET TO IMPLEMENT
+        cout << "YET TO IMPLEMENT" << endl;
         addRecentCommand("help",&rcomands);
         showInput();
     }
@@ -251,6 +261,12 @@ bool isCurrentOSMacOS()
 bool isCurrentOSLinux()
 {
     return (CURRENT_OS == OS_LINUX);
+}
+
+//
+void initializeLogFile(fstream * logFile)
+{
+
 }
 
 //

@@ -69,28 +69,30 @@
      LS = 258,
      CD = 259,
      PWD = 260,
-     UNIX_OPTIONS = 261,
-     FILE_NAME = 262,
-     RCOMMANDS = 263,
-     HELP = 264,
-     CLEAR = 265,
-     NEW_LINE = 266,
-     EXIT = 267,
-     QUIT = 268
+     MKDIR = 261,
+     UNIX_OPTIONS = 262,
+     FILE_NAME = 263,
+     RCOMMANDS = 264,
+     HELP = 265,
+     CLEAR = 266,
+     NEW_LINE = 267,
+     EXIT = 268,
+     QUIT = 269
    };
 #endif
 /* Tokens.  */
 #define LS 258
 #define CD 259
 #define PWD 260
-#define UNIX_OPTIONS 261
-#define FILE_NAME 262
-#define RCOMMANDS 263
-#define HELP 264
-#define CLEAR 265
-#define NEW_LINE 266
-#define EXIT 267
-#define QUIT 268
+#define MKDIR 261
+#define UNIX_OPTIONS 262
+#define FILE_NAME 263
+#define RCOMMANDS 264
+#define HELP 265
+#define CLEAR 266
+#define NEW_LINE 267
+#define EXIT 268
+#define QUIT 269
 
 
 
@@ -114,6 +116,7 @@
     #define OS_WINDOWS 0
     #define OS_MAC_OS 1
     #define OS_LINUX 2
+    #define OPERATION_BUFFER_SIZE 256
     #define RKR_SHELL_VERSION 1.0
     #define USER_ENVIRONMENT_VARIABLE "USER"
     #define CURRENT_PATH_ENVIRONMENT_VARIABLE "PWD"
@@ -147,6 +150,7 @@
 
     // global variables
     recentCommands rcomands;
+    char operationBuffer[OPERATION_BUFFER_SIZE];
 
     // Function prototypes
     void setup();
@@ -185,14 +189,14 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 71 "RKRCommands.y"
+#line 73 "RKRCommands.y"
 {
     int integerValue;
     float floatValue;
     char * stringValue;
 }
 /* Line 193 of yacc.c.  */
-#line 196 "RKRCommands.tab.c"
+#line 200 "RKRCommands.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -205,7 +209,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 209 "RKRCommands.tab.c"
+#line 213 "RKRCommands.tab.c"
 
 #ifdef short
 # undef short
@@ -418,22 +422,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  24
+#define YYFINAL  27
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   37
+#define YYLAST   44
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  14
+#define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  3
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  17
+#define YYNRULES  19
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  32
+#define YYNSTATES  38
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   268
+#define YYMAXUTOK   269
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -467,7 +471,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14
 };
 
 #if YYDEBUG
@@ -476,25 +480,26 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     8,    11,    15,    20,    24,    27,
-      31,    34,    38,    41,    44,    47,    49,    52
+      31,    34,    38,    42,    47,    50,    53,    56,    58,    61
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      15,     0,    -1,    16,    -1,    15,    16,    -1,     3,    11,
-      -1,     3,     6,    11,    -1,     3,     6,     7,    11,    -1,
-       3,     7,    11,    -1,     4,    11,    -1,     4,     7,    11,
-      -1,     5,    11,    -1,     5,     6,    11,    -1,     8,    11,
-      -1,     9,    11,    -1,    10,    11,    -1,    11,    -1,    12,
-      11,    -1,    13,    11,    -1
+      16,     0,    -1,    17,    -1,    16,    17,    -1,     3,    12,
+      -1,     3,     7,    12,    -1,     3,     7,     8,    12,    -1,
+       3,     8,    12,    -1,     4,    12,    -1,     4,     8,    12,
+      -1,     5,    12,    -1,     5,     7,    12,    -1,     6,     8,
+      12,    -1,     6,     7,     8,    12,    -1,     9,    12,    -1,
+      10,    12,    -1,    11,    12,    -1,    12,    -1,    13,    12,
+      -1,    14,    12,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    94,    94,    95,    98,   105,   112,   121,   128,   136,
-     144,   151,   158,   164,   170,   177,   181,   186
+       0,    97,    97,    98,   101,   108,   115,   124,   131,   139,
+     147,   154,   161,   168,   177,   183,   189,   196,   200,   205
 };
 #endif
 
@@ -503,9 +508,9 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "LS", "CD", "PWD", "UNIX_OPTIONS",
-  "FILE_NAME", "RCOMMANDS", "HELP", "CLEAR", "NEW_LINE", "EXIT", "QUIT",
-  "$accept", "commands", "command", 0
+  "$end", "error", "$undefined", "LS", "CD", "PWD", "MKDIR",
+  "UNIX_OPTIONS", "FILE_NAME", "RCOMMANDS", "HELP", "CLEAR", "NEW_LINE",
+  "EXIT", "QUIT", "$accept", "commands", "command", 0
 };
 #endif
 
@@ -515,22 +520,22 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268
+     265,   266,   267,   268,   269
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    14,    15,    15,    16,    16,    16,    16,    16,    16,
-      16,    16,    16,    16,    16,    16,    16,    16
+       0,    15,    16,    16,    17,    17,    17,    17,    17,    17,
+      17,    17,    17,    17,    17,    17,    17,    17,    17,    17
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     2,     2,     3,     4,     3,     2,     3,
-       2,     3,     2,     2,     2,     1,     2,     2
+       2,     3,     3,     4,     2,     2,     2,     1,     2,     2
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -538,33 +543,33 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,    15,     0,     0,
-       0,     2,     0,     0,     4,     0,     8,     0,    10,    12,
-      13,    14,    16,    17,     1,     3,     0,     5,     7,     9,
-      11,     6
+       0,     0,     0,     0,     0,     0,     0,     0,    17,     0,
+       0,     0,     2,     0,     0,     4,     0,     8,     0,    10,
+       0,     0,    14,    15,    16,    18,    19,     1,     3,     0,
+       5,     7,     9,    11,     0,    12,     6,    13
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,    10,    11
+      -1,    11,    12
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -6
+#define YYPACT_NINF -12
 static const yytype_int8 yypact[] =
 {
-      11,    -5,    20,    19,    -4,     6,     7,    -6,    15,    18,
-       0,    -6,    21,    22,    -6,    23,    -6,    24,    -6,    -6,
-      -6,    -6,    -6,    -6,    -6,    -6,    25,    -6,    -6,    -6,
-      -6,    -6
+      12,    20,    21,    -5,    28,   -11,    -4,     7,   -12,     8,
+      19,     0,   -12,    22,    25,   -12,    26,   -12,    27,   -12,
+      32,    29,   -12,   -12,   -12,   -12,   -12,   -12,   -12,    30,
+     -12,   -12,   -12,   -12,    31,   -12,   -12,   -12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,    27
+     -12,   -12,    33
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -574,28 +579,30 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      24,    12,    13,     1,     2,     3,    14,    19,     4,     5,
-       6,     7,     8,     9,     1,     2,     3,    20,    21,     4,
-       5,     6,     7,     8,     9,    17,    22,    15,    26,    23,
-      18,    16,    27,    28,    29,    30,    31,    25
+      27,    22,    18,     1,     2,     3,     4,    19,    23,     5,
+       6,     7,     8,     9,    10,     1,     2,     3,     4,    24,
+      25,     5,     6,     7,     8,     9,    10,    13,    14,    16,
+      29,    26,    15,    17,    30,    20,    21,    31,    32,    33,
+      34,    35,    36,    37,    28
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       0,     6,     7,     3,     4,     5,    11,    11,     8,     9,
-      10,    11,    12,    13,     3,     4,     5,    11,    11,     8,
-       9,    10,    11,    12,    13,     6,    11,     7,     7,    11,
-      11,    11,    11,    11,    11,    11,    11,    10
+       0,    12,     7,     3,     4,     5,     6,    12,    12,     9,
+      10,    11,    12,    13,    14,     3,     4,     5,     6,    12,
+      12,     9,    10,    11,    12,    13,    14,     7,     8,     8,
+       8,    12,    12,    12,    12,     7,     8,    12,    12,    12,
+       8,    12,    12,    12,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,     5,     8,     9,    10,    11,    12,    13,
-      15,    16,     6,     7,    11,     7,    11,     6,    11,    11,
-      11,    11,    11,    11,     0,    16,     7,    11,    11,    11,
-      11,    11
+       0,     3,     4,     5,     6,     9,    10,    11,    12,    13,
+      14,    16,    17,     7,     8,    12,     8,    12,     7,    12,
+       7,     8,    12,    12,    12,    12,    12,     0,    17,     8,
+      12,    12,    12,    12,     8,    12,    12,    12
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1410,7 +1417,7 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 99 "RKRCommands.y"
+#line 102 "RKRCommands.y"
     {
         char * command = "ls";
         addRecentCommand(command,&rcomands);
@@ -1420,7 +1427,7 @@ yyreduce:
     break;
 
   case 5:
-#line 106 "RKRCommands.y"
+#line 109 "RKRCommands.y"
     {
         char * command = strcat("ls ",(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1430,7 +1437,7 @@ yyreduce:
     break;
 
   case 6:
-#line 113 "RKRCommands.y"
+#line 116 "RKRCommands.y"
     {
         char * aux = strcat(strdup("ls "),(yyvsp[(2) - (4)].stringValue));
         aux = strcat(aux,strdup(" "));
@@ -1442,7 +1449,7 @@ yyreduce:
     break;
 
   case 7:
-#line 122 "RKRCommands.y"
+#line 125 "RKRCommands.y"
     {
         char * command = strcat(strdup("ls "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1452,7 +1459,7 @@ yyreduce:
     break;
 
   case 8:
-#line 129 "RKRCommands.y"
+#line 132 "RKRCommands.y"
     {
         char * command = "cd";
         addRecentCommand(command,&rcomands);
@@ -1463,7 +1470,7 @@ yyreduce:
     break;
 
   case 9:
-#line 137 "RKRCommands.y"
+#line 140 "RKRCommands.y"
     {
         char * command = strcat(strdup("cd "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1474,7 +1481,7 @@ yyreduce:
     break;
 
   case 10:
-#line 145 "RKRCommands.y"
+#line 148 "RKRCommands.y"
     {   
         char * command = "pwd";
         addRecentCommand(command,&rcomands);
@@ -1484,7 +1491,7 @@ yyreduce:
     break;
 
   case 11:
-#line 152 "RKRCommands.y"
+#line 155 "RKRCommands.y"
     {
         char * command = strcat(strdup("pwd "),(yyvsp[(2) - (3)].stringValue));
         addRecentCommand(command,&rcomands);
@@ -1494,25 +1501,47 @@ yyreduce:
     break;
 
   case 12:
-#line 159 "RKRCommands.y"
+#line 162 "RKRCommands.y"
     {
-        cout << getRecentCommands(rcomands);
-        addRecentCommand("rcommands",&rcomands);
+        char * command = strcat(strdup("mkdir "),(yyvsp[(2) - (3)].stringValue));
+        addRecentCommand(command,&rcomands);
+        system(command);
         showInput();
     ;}
     break;
 
   case 13:
-#line 165 "RKRCommands.y"
+#line 169 "RKRCommands.y"
     {
-        // YET TO IMPLEMENT
-        addRecentCommand("help",&rcomands);
+        char * aux = strcat(strdup("mkdir "),(yyvsp[(2) - (4)].stringValue));
+        aux = strcat(aux,strdup(" "));
+        char * command = strcat(aux,(yyvsp[(3) - (4)].stringValue));
+        addRecentCommand(command,&rcomands);
+        system(command);
         showInput();
     ;}
     break;
 
   case 14:
-#line 171 "RKRCommands.y"
+#line 178 "RKRCommands.y"
+    {
+        addRecentCommand("rcommands",&rcomands);
+        cout << getRecentCommands(rcomands);
+        showInput();
+    ;}
+    break;
+
+  case 15:
+#line 184 "RKRCommands.y"
+    {
+        cout << "YET TO IMPLEMENT" << endl;
+        addRecentCommand("help",&rcomands);
+        showInput();
+    ;}
+    break;
+
+  case 16:
+#line 190 "RKRCommands.y"
     {
         char * command = "clear";
         addRecentCommand(command,&rcomands);
@@ -1521,23 +1550,23 @@ yyreduce:
     ;}
     break;
 
-  case 15:
-#line 178 "RKRCommands.y"
+  case 17:
+#line 197 "RKRCommands.y"
     {
         showInput();
     ;}
     break;
 
-  case 16:
-#line 182 "RKRCommands.y"
+  case 18:
+#line 201 "RKRCommands.y"
     {
         dealloc();
         return EXIT_SUCCESS;
     ;}
     break;
 
-  case 17:
-#line 187 "RKRCommands.y"
+  case 19:
+#line 206 "RKRCommands.y"
     {
         dealloc();
         return EXIT_SUCCESS;
@@ -1546,7 +1575,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1550 "RKRCommands.tab.c"
+#line 1579 "RKRCommands.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1760,7 +1789,7 @@ yyreturn:
 }
 
 
-#line 191 "RKRCommands.y"
+#line 210 "RKRCommands.y"
 
 
 // Shell lifecycle
@@ -1794,7 +1823,7 @@ void showWelcomeMessage()
 //
 void showInput()
 {
-    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " " << getcwd(NULL,0) << " $>> ";
+    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " " << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << " $>> ";
 }
 
 //
@@ -1870,12 +1899,9 @@ void addRecentCommand(char * command, recentCommands * instance)
 {
     if(recentCommandsNeedShift((*instance)))
     {
-        cout << "GOTTA SHITF! CURRENT INDEX: " << instance->currentIndex << endl;
         instance->currentIndex--;
-
         shiftRecentCommands(instance);
     }
-    cout << "CURRENT INDEX: " << instance->currentIndex << endl;
     instance->data[instance->currentIndex++] = command;
 }
 

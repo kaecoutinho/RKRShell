@@ -42,42 +42,44 @@
      LS = 258,
      CD = 259,
      PWD = 260,
-     UNIX_OPTIONS = 261,
-     FILE_NAME = 262,
-     RCOMMANDS = 263,
-     HELP = 264,
-     CLEAR = 265,
-     NEW_LINE = 266,
-     EXIT = 267,
-     QUIT = 268
+     MKDIR = 261,
+     UNIX_OPTIONS = 262,
+     FILE_NAME = 263,
+     RCOMMANDS = 264,
+     HELP = 265,
+     CLEAR = 266,
+     NEW_LINE = 267,
+     EXIT = 268,
+     QUIT = 269
    };
 #endif
 /* Tokens.  */
 #define LS 258
 #define CD 259
 #define PWD 260
-#define UNIX_OPTIONS 261
-#define FILE_NAME 262
-#define RCOMMANDS 263
-#define HELP 264
-#define CLEAR 265
-#define NEW_LINE 266
-#define EXIT 267
-#define QUIT 268
+#define MKDIR 261
+#define UNIX_OPTIONS 262
+#define FILE_NAME 263
+#define RCOMMANDS 264
+#define HELP 265
+#define CLEAR 266
+#define NEW_LINE 267
+#define EXIT 268
+#define QUIT 269
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 71 "RKRCommands.y"
+#line 73 "RKRCommands.y"
 {
     int integerValue;
     float floatValue;
     char * stringValue;
 }
 /* Line 1529 of yacc.c.  */
-#line 81 "RKRCommands.tab.h"
+#line 83 "RKRCommands.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
