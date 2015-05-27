@@ -8,26 +8,24 @@
     // Default namespace
     using namespace std;
 %}
-
 %%
-[ \t];
-"ls"
-{			
-	return LS;
-}
--[a-zA-Z]+
-{
-	yylval.stringValue = strdup(yytext);
-	return UNIX_OPTIONS;
-}
-[a-zA-Z]+				
-{
-	yylval.stringValue = strdup(yytext);
-	return FILE_NAME;
-}
-[\n]
-{
-	return EXIT;
-}
-.;
+[ \t]			;
+"ls"			{
+					return LS;
+				}
+"exit"			{
+					return EXIT;
+				}
+-[a-zA-Z]+		{
+					yylval.stringValue = strdup(yytext);
+					return UNIX_OPTIONS;
+				}
+[a-zA-Z]+		{
+					yylval.stringValue = strdup(yytext);
+					return FILE_NAME;
+				}
+[\n]			{
+					return NEW_LINE;
+				}
+.				;
 %%

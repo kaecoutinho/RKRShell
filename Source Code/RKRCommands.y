@@ -45,6 +45,7 @@
 %token LS
 %token <stringValue> UNIX_OPTIONS
 %token <stringValue> FILE_NAME
+%token NEW_LINE
 %token EXIT
 
 %%
@@ -52,9 +53,9 @@
 // "commands" is the starting non-terminal symbol (S symbol)
 
 commands:
-    command
-    | commands command EXIT
-;
+    command NEW_LINE
+    | commands command NEW_LINE
+
 command:
     LS
     {
@@ -62,13 +63,13 @@ command:
         showInput();
     }
     | LS UNIX_OPTIONS
-    { 
+    {
         const char *c = strcat(strdup("ls "),$2);
         system(c);
         showInput();
     }
     | LS UNIX_OPTIONS FILE_NAME 
-    { 
+    {
         char *p1 = strcat(strdup("ls "),$2);
         char *p2 = strcat(p1,strdup(" "));
         const char *p3 = strcat(p2,$3);
@@ -76,17 +77,21 @@ command:
         showInput();   
     }
     | LS FILE_NAME
-    { 
+    {
         const char *c = strcat(strdup("ls "),$2);
         system(c);
         showInput();
+    }
+    | EXIT
+    {
+        return EXIT_SUCCESS;
     }
 %%
 
 // Shell lifecycle
 int main(int argumentsCount, char ** argumentsList)
 {
-    cout << "MOTHERFUCKER IM USING THIS SYSTEM" << CURRENT_OS << endl;
+    cout << "MOTHERFUCKER IM USING THIS SYSTEM " << CURRENT_OS << endl;
     showInput();
     yyparse();
     return EXIT_SUCCESS;
