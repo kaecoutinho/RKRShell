@@ -320,13 +320,13 @@ void initializeLogFile(fstream & logFile)
 //
 void logCommandToFile(char * command, fstream & logFile)
 {
-    logFile << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
+    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
 }
 
 //
 void logErrorToFile(char * error, fstream & logfile)
 {
-    logFile << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
+    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << "[" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
 }
 
 //
