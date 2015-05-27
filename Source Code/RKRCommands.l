@@ -1,7 +1,11 @@
 %{
+	// RKRCommands.l
+	// RKRShell
+	// Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda
+	// GNU GPL V2
+
     #include <cstdio>
     #include <iostream>
-    #include <string>
     #include "RKRCommands.tab.h"
     #define YY_DECL extern "C" int yylex()
 
@@ -9,23 +13,44 @@
     using namespace std;
 %}
 %%
-[ \t]			;
-"ls"			{
-					return LS;
-				}
-"exit"			{
-					return EXIT;
-				}
--[a-zA-Z]+		{
-					yylval.stringValue = strdup(yytext);
-					return UNIX_OPTIONS;
-				}
-[a-zA-Z]+		{
-					yylval.stringValue = strdup(yytext);
-					return FILE_NAME;
-				}
-[\n]			{
-					return NEW_LINE;
-				}
-.				;
+[ \t]							;
+"ls"							{
+									return LS;
+								}
+"cd"							{
+									return CD;
+								}
+"pwd"							{
+									return PWD;
+								}
+"mkdir"							{
+									return MKDIR;
+								}
+"rcommands"						{
+									return RCOMMANDS;
+								}
+"help"							{
+									return HELP;
+								}
+"clear"							{
+									return CLEAR;
+								}
+"exit"							{
+									return EXIT;
+								}
+"quit"							{
+									return QUIT;
+								}
+-[a-zA-Z]+						{
+									yylval.stringValue = strdup(yytext);
+									return UNIX_OPTIONS;
+								}
+[a-zA-Z0-9~_@!-\/\\\.]+			{
+									yylval.stringValue = strdup(yytext);
+									return FILE_NAME;
+								}
+[\n]							{
+									return NEW_LINE;
+								}
+.								;
 %%

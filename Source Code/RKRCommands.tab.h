@@ -40,32 +40,44 @@
       know about them.  */
    enum yytokentype {
      LS = 258,
-     UNIX_OPTIONS = 259,
-     FILE_NAME = 260,
-     NEW_LINE = 261,
-     EXIT = 262
+     CD = 259,
+     PWD = 260,
+     UNIX_OPTIONS = 261,
+     FILE_NAME = 262,
+     RCOMMANDS = 263,
+     HELP = 264,
+     CLEAR = 265,
+     NEW_LINE = 266,
+     EXIT = 267,
+     QUIT = 268
    };
 #endif
 /* Tokens.  */
 #define LS 258
-#define UNIX_OPTIONS 259
-#define FILE_NAME 260
-#define NEW_LINE 261
-#define EXIT 262
+#define CD 259
+#define PWD 260
+#define UNIX_OPTIONS 261
+#define FILE_NAME 262
+#define RCOMMANDS 263
+#define HELP 264
+#define CLEAR 265
+#define NEW_LINE 266
+#define EXIT 267
+#define QUIT 268
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 38 "RKRCommands.y"
+#line 71 "RKRCommands.y"
 {
     int integerValue;
     float floatValue;
     char * stringValue;
 }
 /* Line 1529 of yacc.c.  */
-#line 69 "RKRCommands.tab.h"
+#line 81 "RKRCommands.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
