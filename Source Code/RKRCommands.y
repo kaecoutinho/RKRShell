@@ -436,6 +436,6 @@ void destroyRecentCommands(recentCommands * instance)
 void yyerror(const char * errorMessage)
 {
     cout << "Unrecognizable command detected, exiting now" << endl;
-    logErrorToFile(errorMessage,logFile);
+    logErrorToFile((char *)errorMessage,logFile);
     exit(EXIT_ERROR);
 }
