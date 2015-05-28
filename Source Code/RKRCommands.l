@@ -36,6 +36,15 @@
 "date"							{
 									return DATE;
 								}
+"who"							{
+									return WHO;
+								}
+"whois"							{
+									return WHOIS;
+								}
+"whoami"						{
+									return WHOAMI;
+								}
 "rcommands"						{
 									return RCOMMANDS;
 								}

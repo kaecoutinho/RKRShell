@@ -94,6 +94,9 @@
 %token RM
 %token TOUCH
 %token DATE
+%token WHO
+%token WHOIS
+%token WHOAMI
 %token RCOMMANDS
 %token HELP
 %token CLEAR
@@ -249,6 +252,30 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
+    | WHO NEW_LINE
+    {
+
+    }
+    | WHO UNIX_OPTIONS NEW_LINE
+    {
+        
+    }
+    | WHOIS NEW_LINE
+    {
+
+    }
+    | WHOIS FILE_NAME NEW_LINE
+    {
+
+    }
+    | WHOIS UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        
+    }
+    | WHOAMI NEW_LINE
+    {
+        
+    }
     | RCOMMANDS NEW_LINE
     {
         char * command = "rcommands";
@@ -305,14 +332,25 @@ int main(int argumentsCount, char ** argumentsList)
 //
 void setup()
 {
+    char * message;
     initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
     initializeLogFile(logFile);
+    message = "Started RKRShell logged as ";
+    message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
+    message = strcat(message," on ");
+    message = strcat(message,getCurrentDate());
+    logToFile(message,logFile);
 }
 
 //
 void dealloc()
 {
     destroyRecentCommands(&rcomands);
+    message = "Ended RKRShell logged as ";
+    message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
+    message = strcat(message," on ");
+    message = strcat(message,getCurrentDate());
+    logToFile(message,logFile);
     logFile.close();
 }
 
@@ -326,7 +364,7 @@ void showWelcomeMessage()
 //
 void showInput()
 {
-    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] $>> ";
+    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] $>> ";
 }
 
 //
@@ -351,6 +389,11 @@ bool isCurrentOSLinux()
 void initializeLogFile(fstream & logFile)
 {
     logFile.open(LOG_FILE_NAME,fstream::out | std::ios_base::app);
+}
+
+void logToFile(char * message, fstream & logFile)
+{
+    logFile << "* " << message << endl;;
 }
 
 //
@@ -417,7 +460,7 @@ void initializeRecentCommands(recentCommands * instance, int size)
 char * getRecentCommands(recentCommands instance)
 {
     int size = 0;
-    char * aux;
+    char * aux = EMPTY_STRING;
     for(int index = 0; index < instance.size; index++)
     {
         size += strlen(instance.data[index]);
@@ -429,10 +472,6 @@ char * getRecentCommands(recentCommands instance)
         {
             sprintf(aux,"%s%s\n",aux,instance.data[index]);
         }
-    }
-    if(strlen(aux) == 0)
-    {
-        aux = "There are no recent commands yet\n";
     }
     return aux;
 }
