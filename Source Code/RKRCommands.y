@@ -411,7 +411,7 @@ int main(int argumentsCount, char ** argumentsList)
     yyparse();
 }
 
-//
+// Shell main setup routine
 void setup()
 {
     ostringstream message;
@@ -423,7 +423,7 @@ void setup()
     showInput();
 }
 
-//
+// Shell dealloc routine
 void dealloc()
 {
     ostringstream message;
@@ -433,80 +433,80 @@ void dealloc()
     logFile.close();
 }
 
-//
+// Shows a message when the shell starts up
 void showWelcomeMessage()
 {
     cout << "RKRShell V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << endl;
     cout << "Logged in as: " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << endl;
 }
 
-//
+// Shows the cursor carriage with user and path info
 void showInput()
 {
     cout << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] > ";
 }
 
-//
+// Detects if the current O.S. is Windows-based
 bool isCurrentOSWindows()
 {
     return (CURRENT_OS == OS_WINDOWS);
 }
 
-//
+// Detects if the current O.S. is Mac OS-based (Unix)
 bool isCurrentOSMacOS()
 {
     return (CURRENT_OS == OS_MAC_OS);
 }
 
-//
+// Detects if the current O.S. is Linux-based (Unix)
 bool isCurrentOSLinux()
 {
     return (CURRENT_OS == OS_LINUX);
 }
 
-//
+// Initializes a given log file
 void initializeLogFile(fstream & logFile)
 {
     logFile.open(LOG_FILE_NAME,fstream::out | std::ios_base::app);
 }
 
-//
+// Logs a message to a given log file
 void logToFile(char * message, fstream & logFile)
 {
     return logToFile(string(message),logFile);
 }
 
-//
+// Logs a message to a given log file
 void logToFile(string message, fstream & logFile)
 {
     logFile << "* " << message << endl;;
 }
 
-//
+// Logs a command to a given log file
 void logCommandToFile(char * command, fstream & logFile)
 {
     return logCommandToFile(string(command),logFile);
 }
 
-//
+// Logs a command to a given log file
 void logCommandToFile(string command, fstream & logFile)
 {
     logFile << "* " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
 }
 
-//
+// Logs an error to a given log file
 void logErrorToFile(char * error, fstream & logfile)
 {
     return logErrorToFile(string(error),logFile);
 }
 
-//
+// Logs an error to a given log file
 void logErrorToFile(string error, fstream & logfile)
 {
     logFile << "* " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
 }
 
-//
+// Calculates the current date and time
 string getCurrentDate()
 {
     time_t rawTime;
@@ -542,7 +542,7 @@ string getCurrentDate()
     return aux.str();
 }
 
-//
+// Initializes a given recent commands data structure
 void initializeRecentCommands(recentCommands & instance, int size)
 {
     instance.data = new string[size];
@@ -554,7 +554,7 @@ void initializeRecentCommands(recentCommands & instance, int size)
     instance.currentIndex = 0;
 }
 
-//
+// Concatenates all recent commands into a string
 string getRecentCommands(recentCommands instance)
 {
     ostringstream aux;
@@ -568,13 +568,13 @@ string getRecentCommands(recentCommands instance)
     return aux.str();
 }
 
-//
+// Checks if a given recent commands data structure needs to shift down
 bool recentCommandsNeedShift(recentCommands instance)
 {
     return (instance.currentIndex == instance.size);
 }
 
-//
+// Shifts down a given recent commands data structure
 void shiftRecentCommands(recentCommands & instance)
 {
     for(int index = 0; index < instance.size - 1; index++)
@@ -583,7 +583,7 @@ void shiftRecentCommands(recentCommands & instance)
     }
 }
 
-//
+// Adds a command to a given recent commands data structure
 void addRecentCommand(string command, recentCommands & instance)
 {
     if(recentCommandsNeedShift(instance))
@@ -594,26 +594,26 @@ void addRecentCommand(string command, recentCommands & instance)
     instance.data[instance.currentIndex++] = command;
 }
 
-//
+// Destroys a given recent commands data structure
 void destroyRecentCommands(recentCommands & instance)
 {
     delete [] instance.data;
 }
 
-//
+// Decodes a given file name with / without the whitespace special identifier ("+_+")
 string decodeFileName(char * fileName)
 {
     return decodeFileName(string(fileName));
 }
 
-//
+// Decodes a given file name with / without the whitespace special identifier ("+_+")
 string decodeFileName(string fileName)
 {
     boost::replace_all(fileName,WHITESPACE_SPECIAL_IDENTIFIER,WHITESPACE_SPECIAL_CHARACTER);
     return fileName;
 }
 
-//
+// Executes a given command (Command executer manager)
 void executeCommand(string command)
 {
     if(command.compare(NOT_SUPPORTED_COMMAND) == EQUAL_STRINGS)
@@ -674,7 +674,7 @@ void executeCommand(string command)
     }
 }
 
-//
+// Converts Unix-based parameter into NT-based parameters
 string convertUnixOptionsIntoNTOptions(string options)
 {
     ostringstream aux;
@@ -686,7 +686,7 @@ string convertUnixOptionsIntoNTOptions(string options)
     return aux.str();
 }
 
-//
+// Converts NT-based parameter into Unix-based parameters
 string convertNTOptionsIntoUnixOptions(string options)
 {
     ostringstream aux;
@@ -698,7 +698,7 @@ string convertNTOptionsIntoUnixOptions(string options)
     return aux.str();
 }
 
-//
+// Properly treats an error when found
 void yyerror(const char * errorMessage)
 {
     cout << "Unrecognizable command detected by RKRShell" << endl;
