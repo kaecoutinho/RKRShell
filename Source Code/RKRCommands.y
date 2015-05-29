@@ -11,6 +11,7 @@
     #include <string>
     #include <sstream>
     #include <cstring>
+    #include <regex>
     #include <unistd.h>
     #include <time.h>
     #define EXIT_SUCCESS 0
@@ -26,6 +27,7 @@
     #define EQUAL_STRING 0
     #define EMPTY_STRING ""
     #define LOG_FILE_NAME "RKRLog.log"
+    #define WHITESPACE_SPECIAL_IDENTIFIER "+_+"
 
     // OS detection
     #if (defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined __WIN32__ || defined __WINDOWS__)
@@ -76,6 +78,7 @@
     void shiftRecentCommands(recentCommands * instance);
     void addRecentCommand(char * command, recentCommands * instance);
     void destroyRecentCommands(recentCommands * instance);
+    string decodeFileName(char * fileName);
     void yyerror(const char *s);
 %}
 
@@ -160,12 +163,12 @@ command:
     }
     | CD FILE_NAME NEW_LINE
     {
-        cout << "TESTING";
         char * command = strcat(strdup("cd "),$2);
-        system(command);
-        chdir($2);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        // system(command);
+        // chdir($2);
+        // addRecentCommand(command,&rcomands);
+        // logCommandToFile(command,logFile);
+        cout << "\n\n ENCODED: " << $2 << "\n\n DECODED: " << decodeFileName($2) << endl;
         showInput();
     }
     | PWD NEW_LINE
@@ -541,6 +544,23 @@ void addRecentCommand(char * command, recentCommands * instance)
 void destroyRecentCommands(recentCommands * instance)
 {
     free(instance->data);
+}
+
+//
+string decodeFileName(char * fileName)
+{
+    string aux(fileName);
+    for(size_t position = 0; ; position++)
+    {
+        position = aux.find(WHITESPACE_SPECIAL_IDENTIFIER,position);
+        if(position == string::npos)
+        {
+            break;
+        }
+        aux.erase(position,1);
+        aux.insert(position," ");
+    }
+    return aux;
 }
 
 //
