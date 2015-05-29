@@ -62,9 +62,9 @@
 								}
 -[a-zA-Z]+						{
 									yylval.stringValue = strdup(yytext);
-									return UNIX_OPTIONS;
+									return OPTIONS;
 								}
-[a-zA-Z0-9~_@!-\/\\\.]+			{
+[a-zA-Z0-9:~_@!-\/\\\.]+		{
 									yylval.stringValue = strdup(yytext);
 									return FILE_NAME;
 								}

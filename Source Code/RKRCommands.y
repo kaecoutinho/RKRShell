@@ -66,6 +66,7 @@
     bool isCurrentOSMacOS();
     bool isCurrentOSLinux();
     void initializeLogFile(fstream & logFile);
+    void logToFile(char * message, fstream & logFile);
     void logCommandToFile(char * command, fstream & logFile);
     void logErrorToFile(char * error, fstream & logfile);
     string getCurrentDate();
@@ -103,7 +104,7 @@
 %token NEW_LINE
 %token EXIT
 %token QUIT
-%token <stringValue> UNIX_OPTIONS
+%token <stringValue> OPTIONS
 %token <stringValue> FILE_NAME
 
 %%
@@ -122,7 +123,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | LS UNIX_OPTIONS NEW_LINE
+    | LS OPTIONS NEW_LINE
     {
         char * command = strcat("ls ",$2);
         system(command);
@@ -130,7 +131,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | LS UNIX_OPTIONS FILE_NAME NEW_LINE
+    | LS OPTIONS FILE_NAME NEW_LINE
     {
         char * aux = strcat(strdup("ls "),$2);
         aux = strcat(aux,strdup(" "));
@@ -159,6 +160,7 @@ command:
     }
     | CD FILE_NAME NEW_LINE
     {
+        cout << "TESTING";
         char * command = strcat(strdup("cd "),$2);
         system(command);
         chdir($2);
@@ -174,7 +176,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | PWD UNIX_OPTIONS NEW_LINE
+    | PWD OPTIONS NEW_LINE
     {
         char * command = strcat(strdup("pwd "),$2);
         system(command);
@@ -190,7 +192,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | MKDIR UNIX_OPTIONS FILE_NAME NEW_LINE
+    | MKDIR OPTIONS FILE_NAME NEW_LINE
     {
         char * aux = strcat(strdup("mkdir "),$2);
         aux = strcat(aux,strdup(" "));
@@ -208,7 +210,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | RM UNIX_OPTIONS FILE_NAME NEW_LINE
+    | RM OPTIONS FILE_NAME NEW_LINE
     {
         char * aux = strcat(strdup("rm "),$2);
         aux = strcat(aux,strdup(" "));
@@ -226,7 +228,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | TOUCH UNIX_OPTIONS FILE_NAME NEW_LINE
+    | TOUCH OPTIONS FILE_NAME NEW_LINE
     {
         char * aux = strcat(strdup("touch "),$2);
         aux = strcat(aux,strdup(" "));
@@ -244,7 +246,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | DATE UNIX_OPTIONS NEW_LINE
+    | DATE OPTIONS NEW_LINE
     {
         char * command = strcat(strdup("date "),$2);
         system(command);
@@ -260,7 +262,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | WHO UNIX_OPTIONS NEW_LINE
+    | WHO OPTIONS NEW_LINE
     {
         char * command = strcat(strdup("who "),$2);
         system(command);
@@ -284,7 +286,7 @@ command:
         logCommandToFile(command,logFile);
         showInput();
     }
-    | WHOIS UNIX_OPTIONS FILE_NAME NEW_LINE
+    | WHOIS OPTIONS FILE_NAME NEW_LINE
     {
         char * aux = strcat(strdup("whois "),$2);
         aux = strcat(aux,strdup(" "));
@@ -344,6 +346,12 @@ command:
         logCommandToFile(command,logFile);
         return EXIT_SUCCESS;
     }
+
+    // // TEST PURPOSE ONLY
+    // | FILE_NAME NEW_LINE
+    // {
+    //     cout << "READ: " << $1 << endl;
+    // }
 %%
 
 // Shell lifecycle
@@ -362,21 +370,22 @@ void setup()
     initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
     initializeLogFile(logFile);
     message = "Started RKRShell logged as ";
-    message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
-    message = strcat(message," on ");
-    message = strcat(message,getCurrentDate());
-    logToFile(message,logFile);
+    // message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
+    // message = strcat(message," on ");
+    // message = strcat(message,getCurrentDate().c_str());
+    // logToFile(message,logFile);
 }
 
 //
 void dealloc()
 {
+    char * message;
     destroyRecentCommands(&rcomands);
     message = "Ended RKRShell logged as ";
-    message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
-    message = strcat(message," on ");
-    message = strcat(message,getCurrentDate());
-    logToFile(message,logFile);
+    // message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
+    // message = strcat(message," on ");
+    // message = strcat(message,getCurrentDate().c_str());
+    // logToFile(message,logFile);
     logFile.close();
 }
 
