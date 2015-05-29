@@ -7,7 +7,11 @@
     #include <cstdio>
     #include <iostream>
     #include "RKRCommands.tab.h"
+
+	// Flex analyser constant declaration
+    #ifndef YY_DECL
     #define YY_DECL extern "C" int yylex()
+    #endif
 
     // Default namespace
     using namespace std;
@@ -17,6 +21,9 @@
 [ \t]							;
 "ls"							{
 									return LS;
+								}
+"dir"|"DIR"						{
+									return DIR;
 								}
 "cd"							{
 									return CD;
@@ -57,6 +64,9 @@
 "clear"							{
 									return CLEAR;
 								}
+"cls"							{
+									return CLS;
+								}
 "exit"							{
 									return EXIT;
 								}
@@ -65,7 +75,11 @@
 								}
 -[a-zA-Z]+						{
 									yylval.stringValue = strdup(yytext);
-									return OPTIONS;
+									return UNIX_OPTIONS;
+								}
+\/-?[a-zA-Z]:?-?[a-zA-Z]?]		{
+									yylval.stringValue = strdup(yytext);
+									return NT_OPTIONS;
 								}
 [a-zA-Z0-9:~_@!-\/\\\.]+		{
 									yylval.stringValue = strdup(yytext);

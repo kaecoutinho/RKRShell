@@ -56,7 +56,7 @@
     extern "C" int yyparse();
     extern "C" FILE *yyin;
 
-    // global variables
+    // Global variables
     recentCommands rcomands;
     char operationBuffer[OPERATION_BUFFER_SIZE];
     fstream logFile;
@@ -86,7 +86,7 @@
     string decodeFileName(char * fileName);
     string decodeFileName(string fileName);
     void executeCommand(string command);
-    void yyerror(const char *s);
+    void yyerror(const char * errorMessage);
 %}
 
 // Union structure's definition
@@ -99,6 +99,7 @@
 
 // Recognizable tokens (terminal symbols a.k.a. T set)
 %token LS
+%token DIR
 %token CD
 %token PWD
 %token MKDIR
@@ -112,10 +113,12 @@
 %token HELP
 %token VERSION
 %token CLEAR
+%token CLS
 %token NEW_LINE
 %token EXIT
 %token QUIT
-%token <stringValue> OPTIONS
+%token <stringValue> UNIX_OPTIONS
+%token <stringValue> NT_OPTIONS
 %token <stringValue> FILE_NAME
 
 %%
@@ -133,14 +136,14 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | LS OPTIONS NEW_LINE
+    | LS UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
         command << "ls " << $2;
         executeCommand(command.str());
         showInput();
     }
-    | LS OPTIONS FILE_NAME NEW_LINE
+    | LS UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << "ls " << $2 << " " << decodeFileName($3); 
@@ -151,6 +154,34 @@ command:
     {
         ostringstream command;
         command << "ls " << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | DIR NEW_LINE
+    {
+        ostringstream command;
+        command << "dir";
+        executeCommand(command.str());
+        showInput();
+    }
+    | DIR NT_OPTIONS NEW_LINE
+    {
+        ostringstream command;
+        command << "dir " << $2;
+        executeCommand(command.str());
+        showInput();
+    }
+    | DIR NT_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << "dir " << $2 << " " << decodeFileName($3); 
+        executeCommand(command.str());
+        showInput();
+    }
+    | DIR FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << "dir " << decodeFileName($2);
         executeCommand(command.str());
         showInput();
     }
@@ -178,7 +209,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | PWD OPTIONS NEW_LINE
+    | PWD UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
         command << "pwd " << $2;
@@ -192,7 +223,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | MKDIR OPTIONS FILE_NAME NEW_LINE
+    | MKDIR UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << "mkdir " << $2 << " " << decodeFileName($3);
@@ -206,7 +237,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | RM OPTIONS FILE_NAME NEW_LINE
+    | RM UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << "rm " << $2 << " " << decodeFileName($3);
@@ -220,7 +251,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | TOUCH OPTIONS FILE_NAME NEW_LINE
+    | TOUCH UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << "touch " << $2 << " " << decodeFileName($3);
@@ -234,7 +265,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | DATE OPTIONS NEW_LINE
+    | DATE UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
         command << "date " << $2;
@@ -248,7 +279,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | WHO OPTIONS NEW_LINE
+    | WHO UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
         command << "who " << $2;
@@ -269,7 +300,7 @@ command:
         executeCommand(command.str());
         showInput();
     }
-    | WHOIS OPTIONS FILE_NAME NEW_LINE
+    | WHOIS UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << "whois " << $2 << " " << decodeFileName($3);
@@ -307,7 +338,14 @@ command:
     | CLEAR NEW_LINE
     {
         ostringstream command;
-        command << "clear";
+        command  << ((isCurrentOSWindows()) ? "cls" : "clear");
+        executeCommand(command.str());
+        showInput();
+    }
+    | CLS NEW_LINE
+    {
+        ostringstream command;
+        command  << ((isCurrentOSWindows()) ? "cls" : "clear");
         executeCommand(command.str());
         showInput();
     }
@@ -328,6 +366,11 @@ command:
         command << "quit";
         executeCommand(command.str());
         return EXIT_SUCCESS;
+    }
+    | error NEW_LINE
+    {
+        yyerrok;
+        yyclearin;
     }
 %%
 
@@ -582,7 +625,7 @@ void executeCommand(string command)
 //
 void yyerror(const char * errorMessage)
 {
-    cout << "Unrecognizable command detected by RKRShell, exiting now!" << endl;
-    logErrorToFile((char *)errorMessage,logFile);
-    exit(EXIT_ERROR);
+    cout << "Unrecognizable command detected by RKRShell" << endl;
+    logErrorToFile(string(errorMessage),logFile);
+    showInput();
 }
