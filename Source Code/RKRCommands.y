@@ -254,27 +254,53 @@ command:
     }
     | WHO NEW_LINE
     {
-
+        char * command = "who";
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
     }
     | WHO UNIX_OPTIONS NEW_LINE
     {
-        
+        char * command = strcat(strdup("who "),$2);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
     }
     | WHOIS NEW_LINE
     {
-
+        char * command = "whois";
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
     }
     | WHOIS FILE_NAME NEW_LINE
     {
-
+        char * command = strcat(strdup("whois "),$2);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
     }
     | WHOIS UNIX_OPTIONS FILE_NAME NEW_LINE
     {
-        
+        char * aux = strcat(strdup("whois "),$2);
+        aux = strcat(aux,strdup(" "));
+        char * command = strcat(aux,$3);
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();   
     }
     | WHOAMI NEW_LINE
     {
-        
+        char * command = "whoami";
+        system(command);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
+        showInput();
     }
     | RCOMMANDS NEW_LINE
     {
