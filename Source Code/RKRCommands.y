@@ -24,11 +24,12 @@
     #define USER_ENVIRONMENT_VARIABLE "USER"
     #define CURRENT_PATH_ENVIRONMENT_VARIABLE "PWD"
     #define RCOMANDS_ARRAY_SIZE 10
-    #define EQUAL_STRING 0
+    #define EQUAL_STRINGS 0
     #define EMPTY_STRING ""
     #define LOG_FILE_NAME "RKRLog.log"
     #define WHITESPACE_SPECIAL_IDENTIFIER "+_+"
     #define WHITESPACE_SPECIAL_CHARACTER " "
+    #define NOT_SUPPORTED_COMMAND "nscommand"
 
     // OS detection
     #if (defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined __WIN32__ || defined __WINDOWS__)
@@ -42,10 +43,10 @@
     // Default namespace
     using namespace std;
 
-    //
+    // Recent commands data structure
     typedef struct recentCommands
     {
-        char ** data;
+        string * data;
         int size, currentIndex;
     }
     recentCommands;
@@ -72,15 +73,19 @@
     void logToFile(char * message, fstream & logFile);
     void logToFile(string message, fstream & logFile);
     void logCommandToFile(char * command, fstream & logFile);
+    void logCommandToFile(string command, fstream & logFile);
     void logErrorToFile(char * error, fstream & logfile);
+    void logErrorToFile(string error, fstream & logfile);
     string getCurrentDate();
-    void initializeRecentCommands(recentCommands * instance, int size);
-    char * getRecentCommands(recentCommands instance);
+    void initializeRecentCommands(recentCommands & instance, int size);
+    string getRecentCommands(recentCommands instance);
     bool recentCommandsNeedShift(recentCommands instance);
-    void shiftRecentCommands(recentCommands * instance);
-    void addRecentCommand(char * command, recentCommands * instance);
-    void destroyRecentCommands(recentCommands * instance);
+    void shiftRecentCommands(recentCommands & instance);
+    void addRecentCommand(string command, recentCommands & instance);
+    void destroyRecentCommands(recentCommands & instance);
     string decodeFileName(char * fileName);
+    string decodeFileName(string fileName);
+    void executeCommand(string command);
     void yyerror(const char *s);
 %}
 
@@ -105,6 +110,7 @@
 %token WHOAMI
 %token RCOMMANDS
 %token HELP
+%token VERSION
 %token CLEAR
 %token NEW_LINE
 %token EXIT
@@ -122,225 +128,187 @@ commands:
 command:
     LS NEW_LINE
     {
-        char * command = "ls";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "ls";
+        executeCommand(command.str());
         showInput();
     }
     | LS OPTIONS NEW_LINE
     {
-        char * command = strcat("ls ",$2);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "ls " << $2;
+        executeCommand(command.str());
         showInput();
     }
     | LS OPTIONS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($3).c_str();
-        char * aux = strcat(strdup("ls "),$2);
-        aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "ls " << $2 << " " << decodeFileName($3); 
+        executeCommand(command.str());
         showInput();
     }
     | LS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("ls "),fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "ls " << decodeFileName($2);
+        executeCommand(command.str());
         showInput();
     }
     | CD NEW_LINE
     {
-        char * command = "cd";
-        system(command);
+        ostringstream command;
+        command << "cd";
+        executeCommand(command.str());
         chdir(strcat(strdup("/Users/"),getenv(USER_ENVIRONMENT_VARIABLE)));
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
         showInput();
     }
     | CD FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("cd "),fileName);
-        system(command);
-        chdir(fileName);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        string fileName = decodeFileName($2);
+        command << "cd " << fileName;
+        executeCommand(command.str());
+        chdir(fileName.c_str());
         showInput();
     }
     | PWD NEW_LINE
     {   
-        char * command = "pwd";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "pwd";
+        executeCommand(command.str());
         showInput();
     }
     | PWD OPTIONS NEW_LINE
     {
-        char * command = strcat(strdup("pwd "),$2);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "pwd " << $2;
+        executeCommand(command.str());
         showInput();
     }
     | MKDIR FILE_NAME NEW_LINE
-    {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("mkdir "),fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+    {   
+        ostringstream command;
+        command << "mkdir " << decodeFileName($2);
+        executeCommand(command.str());
         showInput();
     }
     | MKDIR OPTIONS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($3).c_str();
-        char * aux = strcat(strdup("mkdir "),$2);
-        aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "mkdir " << $2 << " " << decodeFileName($3);
+        executeCommand(command.str());
         showInput();
     }
     | RM FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("rm "),fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "rm " << decodeFileName($2);
+        executeCommand(command.str());
         showInput();
     }
     | RM OPTIONS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($3).c_str();
-        char * aux = strcat(strdup("rm "),$2);
-        aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "rm " << $2 << " " << decodeFileName($3);
+        executeCommand(command.str());
         showInput();
     }
     | TOUCH FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("touch "),fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "touch " << decodeFileName($2);
+        executeCommand(command.str());
         showInput();
     }
     | TOUCH OPTIONS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($3).c_str();
-        char * aux = strcat(strdup("touch "),$2);
-        aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "touch " << $2 << " " << decodeFileName($3);
+        executeCommand(command.str());
         showInput();
     }
     | DATE NEW_LINE
     {
-        char * command = "date";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "date";
+        executeCommand(command.str());
         showInput();
     }
     | DATE OPTIONS NEW_LINE
     {
-        char * command = strcat(strdup("date "),$2);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "date " << $2;
+        executeCommand(command.str());
         showInput();
     }
     | WHO NEW_LINE
     {
-        char * command = "who";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "who";
+        executeCommand(command.str());
         showInput();
     }
     | WHO OPTIONS NEW_LINE
     {
-        char * command = strcat(strdup("who "),$2);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "who " << $2;
+        executeCommand(command.str());
         showInput();
     }
     | WHOIS NEW_LINE
     {
-        char * command = "whois";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "whois";
+        executeCommand(command.str());
         showInput();
     }
     | WHOIS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($2).c_str();
-        char * command = strcat(strdup("whois "),fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "whois " << decodeFileName($2);
+        executeCommand(command.str());
         showInput();
     }
     | WHOIS OPTIONS FILE_NAME NEW_LINE
     {
-        const char * fileName = decodeFileName($3).c_str();
-        char * aux = strcat(strdup("whois "),$2);
-        aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,fileName);
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
-        showInput();   
+        ostringstream command;
+        command << "whois " << $2 << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
     }
     | WHOAMI NEW_LINE
     {
-        char * command = "whoami";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "whoami";
+        executeCommand(command.str());
         showInput();
     }
     | RCOMMANDS NEW_LINE
     {
-        char * command = "rcommands";
-        addRecentCommand(command,&rcomands);
-        cout << getRecentCommands(rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "rcommands";
+        executeCommand(command.str());
         showInput();
     }
     | HELP NEW_LINE
     {
-        char * command = "help";
-        cout << "YET TO IMPLEMENT" << endl;
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "help";
+        executeCommand(command.str());
+        showInput();
+    }
+    | VERSION NEW_LINE
+    {
+        ostringstream command;
+        command << "version";
+        executeCommand(command.str());
         showInput();
     }
     | CLEAR NEW_LINE
     {
-        char * command = "clear";
-        system(command);
-        addRecentCommand(command,&rcomands);
-        logCommandToFile(command,logFile);
+        ostringstream command;
+        command << "clear";
+        executeCommand(command.str());
         showInput();
     }
     | NEW_LINE
@@ -349,16 +317,16 @@ command:
     }
     | EXIT NEW_LINE
     {
-        char * command = "exit";
-        logCommandToFile(command,logFile);
-        dealloc();
+        ostringstream command;
+        command << "exit";
+        executeCommand(command.str());
         return EXIT_SUCCESS;
     }
     | QUIT NEW_LINE
     {
-        char * command = "quit";
-        logCommandToFile(command,logFile);
-        dealloc();
+        ostringstream command;
+        command << "quit";
+        executeCommand(command.str());
         return EXIT_SUCCESS;
     }
 %%
@@ -367,8 +335,6 @@ command:
 int main(int argumentsCount, char ** argumentsList)
 {
     setup();
-    showWelcomeMessage();
-    showInput();
     yyparse();
 }
 
@@ -376,17 +342,19 @@ int main(int argumentsCount, char ** argumentsList)
 void setup()
 {
     ostringstream message;
-    initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
+    initializeRecentCommands(rcomands,RCOMANDS_ARRAY_SIZE);
     initializeLogFile(logFile);
     message << "Started RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
     logToFile(message.str(),logFile);
+    showWelcomeMessage();
+    showInput();
 }
 
 //
 void dealloc()
 {
     ostringstream message;
-    destroyRecentCommands(&rcomands);
+    destroyRecentCommands(rcomands);
     message << "Ended RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
     logToFile(message.str(),logFile);
     logFile.close();
@@ -402,7 +370,7 @@ void showWelcomeMessage()
 //
 void showInput()
 {
-    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] $>> ";
+    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] > ";
 }
 
 //
@@ -432,7 +400,7 @@ void initializeLogFile(fstream & logFile)
 //
 void logToFile(char * message, fstream & logFile)
 {
-    logFile << "* " << message << endl;;
+    return logToFile(string(message),logFile);
 }
 
 //
@@ -444,11 +412,23 @@ void logToFile(string message, fstream & logFile)
 //
 void logCommandToFile(char * command, fstream & logFile)
 {
+    return logCommandToFile(string(command),logFile);
+}
+
+//
+void logCommandToFile(string command, fstream & logFile)
+{
     logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
 }
 
 //
 void logErrorToFile(char * error, fstream & logfile)
+{
+    return logErrorToFile(string(error),logFile);
+}
+
+//
+void logErrorToFile(string error, fstream & logfile)
 {
     logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
 }
@@ -490,35 +470,29 @@ string getCurrentDate()
 }
 
 //
-void initializeRecentCommands(recentCommands * instance, int size)
+void initializeRecentCommands(recentCommands & instance, int size)
 {
-    instance->data = (char **)malloc(sizeof(char *) * size);
+    instance.data = new string[size];
     for(int index = 0; index < size; index++)
     {
-        instance->data[index] = EMPTY_STRING;
+        instance.data[index] = EMPTY_STRING;
     }
-    instance->size = size;
-    instance->currentIndex = 0;
+    instance.size = size;
+    instance.currentIndex = 0;
 }
 
 //
-char * getRecentCommands(recentCommands instance)
+string getRecentCommands(recentCommands instance)
 {
-    int size = 0;
-    char * aux = EMPTY_STRING;
+    ostringstream aux;
     for(int index = 0; index < instance.size; index++)
     {
-        size += strlen(instance.data[index]);
-    }
-    aux = (char *)malloc(sizeof(char) * size);
-    for(int index = 0; index < instance.size; index++)
-    {
-        if(strcmp(instance.data[index],EMPTY_STRING) != EQUAL_STRING)
+        if(instance.data[index].compare(EMPTY_STRING) != EQUAL_STRINGS)
         {
-            sprintf(aux,"%s%s\n",aux,instance.data[index]);
+            aux << instance.data[index] << endl;
         }
     }
-    return aux;
+    return aux.str();
 }
 
 //
@@ -528,43 +502,87 @@ bool recentCommandsNeedShift(recentCommands instance)
 }
 
 //
-void shiftRecentCommands(recentCommands * instance)
+void shiftRecentCommands(recentCommands & instance)
 {
-    for(int index = 0; index < instance->size - 1; index++)
+    for(int index = 0; index < instance.size - 1; index++)
     {
-        instance->data[index] = instance->data[index + 1];
+        instance.data[index] = instance.data[index + 1];
     }
 }
 
 //
-void addRecentCommand(char * command, recentCommands * instance)
+void addRecentCommand(string command, recentCommands & instance)
 {
-    if(recentCommandsNeedShift((*instance)))
+    if(recentCommandsNeedShift(instance))
     {
-        instance->currentIndex--;
+        instance.currentIndex--;
         shiftRecentCommands(instance);
     }
-    instance->data[instance->currentIndex++] = command;
+    instance.data[instance.currentIndex++] = command;
 }
 
 //
-void destroyRecentCommands(recentCommands * instance)
+void destroyRecentCommands(recentCommands & instance)
 {
-    free(instance->data);
+    delete [] instance.data;
 }
 
 //
 string decodeFileName(char * fileName)
 {
-    string aux(fileName);
-    boost::replace_all(aux,WHITESPACE_SPECIAL_IDENTIFIER,WHITESPACE_SPECIAL_CHARACTER);
-    return aux;
+    return decodeFileName(string(fileName));
+}
+
+//
+string decodeFileName(string fileName)
+{
+    boost::replace_all(fileName,WHITESPACE_SPECIAL_IDENTIFIER,WHITESPACE_SPECIAL_CHARACTER);
+    return fileName;
+}
+
+//
+void executeCommand(string command)
+{
+    if(command.compare(NOT_SUPPORTED_COMMAND) == EQUAL_STRINGS)
+    {
+        // ADD NS COMMAND TEXT
+    }
+    else if(command.compare("rcommands") == EQUAL_STRINGS)
+    {
+        addRecentCommand(command,rcomands);
+        cout << getRecentCommands(rcomands);
+        logCommandToFile(command,logFile);
+    }
+    else if(command.compare("help") == EQUAL_STRINGS)
+    {
+        cout << "YET TO IMPLEMENT" << endl; // ADD HELP TEXT
+        addRecentCommand(command,rcomands);
+        logCommandToFile(command,logFile);
+    }
+    else if(command.compare("version") == EQUAL_STRINGS)
+    {
+        cout << "RKRShell V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << endl;
+        addRecentCommand(command,rcomands);
+        logCommandToFile(command,logFile);
+    }
+    else if(command.compare("exit") == EQUAL_STRINGS || command.compare("quit") == EQUAL_STRINGS)
+    {
+        cout << "Bye, thanks for using RKRShell!" << endl;
+        logCommandToFile(command,logFile);
+        dealloc();
+    }
+    else
+    {
+        system(command.c_str());
+        addRecentCommand(command,rcomands);
+        logCommandToFile(command,logFile);
+    }
 }
 
 //
 void yyerror(const char * errorMessage)
 {
-    cout << "Unrecognizable command detected, exiting now" << endl;
+    cout << "Unrecognizable command detected by RKRShell, exiting now!" << endl;
     logErrorToFile((char *)errorMessage,logFile);
     exit(EXIT_ERROR);
 }

@@ -50,6 +50,9 @@
 								}
 "help"							{
 									return HELP;
+								}	
+"version"						{
+									return VERSION;
 								}
 "clear"							{
 									return CLEAR;
