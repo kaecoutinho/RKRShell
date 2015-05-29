@@ -149,7 +149,8 @@ command:
     }
     | LS FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("ls "),$2);
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("ls "),fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -192,7 +193,8 @@ command:
     }
     | MKDIR FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("mkdir "),$2);
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("mkdir "),fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -200,9 +202,10 @@ command:
     }
     | MKDIR OPTIONS FILE_NAME NEW_LINE
     {
+        const char * fileName = decodeFileName($3).c_str();
         char * aux = strcat(strdup("mkdir "),$2);
         aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,$3);
+        char * command = strcat(aux,fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -210,7 +213,8 @@ command:
     }
     | RM FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("rm "),$2);
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("rm "),fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -218,9 +222,10 @@ command:
     }
     | RM OPTIONS FILE_NAME NEW_LINE
     {
+        const char * fileName = decodeFileName($3).c_str();
         char * aux = strcat(strdup("rm "),$2);
         aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,$3);
+        char * command = strcat(aux,fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -228,7 +233,8 @@ command:
     }
     | TOUCH FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("touch "),$2);
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("touch "),fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -236,9 +242,10 @@ command:
     }
     | TOUCH OPTIONS FILE_NAME NEW_LINE
     {
+        const char * fileName = decodeFileName($3).c_str();
         char * aux = strcat(strdup("touch "),$2);
         aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,$3);
+        char * command = strcat(aux,fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -286,7 +293,8 @@ command:
     }
     | WHOIS FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("whois "),$2);
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("whois "),fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -294,9 +302,10 @@ command:
     }
     | WHOIS OPTIONS FILE_NAME NEW_LINE
     {
+        const char * fileName = decodeFileName($3).c_str();
         char * aux = strcat(strdup("whois "),$2);
         aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,$3);
+        char * command = strcat(aux,fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -352,12 +361,6 @@ command:
         dealloc();
         return EXIT_SUCCESS;
     }
-
-    // // TEST PURPOSE ONLY
-    // | FILE_NAME NEW_LINE
-    // {
-    //     cout << "READ: " << $1 << endl;
-    // }
 %%
 
 // Shell lifecycle
