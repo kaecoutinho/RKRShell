@@ -40,7 +40,7 @@
 "touch"							{
 									return TOUCH;
 								}
-"date"							{
+"date"|"DATE"					{
 									return DATE;
 								}
 "who"							{
@@ -64,7 +64,7 @@
 "clear"							{
 									return CLEAR;
 								}
-"cls"							{
+"cls"|"CLS"						{
 									return CLS;
 								}
 "exit"							{

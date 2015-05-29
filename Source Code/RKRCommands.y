@@ -86,6 +86,8 @@
     string decodeFileName(char * fileName);
     string decodeFileName(string fileName);
     void executeCommand(string command);
+    string convertUnixOptionsIntoNTOptions(string options);
+    string convertNTOptionsIntoUnixOptions(string options);
     void yyerror(const char * errorMessage);
 %}
 
@@ -132,34 +134,35 @@ command:
     LS NEW_LINE
     {
         ostringstream command;
-        command << "ls";
+        command << ((isCurrentOSWindows()) ? "dir" : "ls");
         executeCommand(command.str());
         showInput();
     }
     | LS UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
-        command << "ls " << $2;
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions(string($2)) : $2);
         executeCommand(command.str());
         showInput();
     }
     | LS UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "ls " << $2 << " " << decodeFileName($3); 
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions(string($2)) : $2) << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
     }
     | LS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "ls " << decodeFileName($2);
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << decodeFileName($2);
         executeCommand(command.str());
         showInput();
     }
     | DIR NEW_LINE
     {
         ostringstream command;
+        command << ((isCurrentOSWindows()) ? "dir" : "ls");
         command << "dir";
         executeCommand(command.str());
         showInput();
@@ -167,21 +170,21 @@ command:
     | DIR NT_OPTIONS NEW_LINE
     {
         ostringstream command;
-        command << "dir " << $2;
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions(string($2)));
         executeCommand(command.str());
         showInput();
     }
     | DIR NT_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "dir " << $2 << " " << decodeFileName($3); 
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions(string($2))) << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
     }
     | DIR FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "dir " << decodeFileName($2);
+        command << ((isCurrentOSWindows()) ? "dir " : "ls ") << decodeFileName($2);
         executeCommand(command.str());
         showInput();
     }
@@ -247,13 +250,14 @@ command:
     | TOUCH FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "touch " << decodeFileName($2);
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "touch ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         executeCommand(command.str());
         showInput();
     }
     | TOUCH UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "touch ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         command << "touch " << $2 << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
@@ -268,49 +272,56 @@ command:
     | DATE UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
-        command << "date " << $2;
+        command << "date " << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions($2) : $2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | DATE NT_OPTIONS NEW_LINE
+    {
+        ostringstream command;
+        command << "date " << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions($2));
         executeCommand(command.str());
         showInput();
     }
     | WHO NEW_LINE
     {
         ostringstream command;
-        command << "who";
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "who");
         executeCommand(command.str());
         showInput();
     }
     | WHO UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
-        command << "who " << $2;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "who ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2);
         executeCommand(command.str());
         showInput();
     }
     | WHOIS NEW_LINE
     {
         ostringstream command;
-        command << "whois";
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whois");
         executeCommand(command.str());
         showInput();
     }
     | WHOIS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "whois " << decodeFileName($2);
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whois ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         executeCommand(command.str());
         showInput();
     }
     | WHOIS UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "whois " << $2 << " " << decodeFileName($3);
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whois ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         executeCommand(command.str());
         showInput();
     }
     | WHOAMI NEW_LINE
     {
         ostringstream command;
-        command << "whoami";
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whoami");
         executeCommand(command.str());
         showInput();
     }
@@ -620,6 +631,18 @@ void executeCommand(string command)
         addRecentCommand(command,rcomands);
         logCommandToFile(command,logFile);
     }
+}
+
+//
+string convertUnixOptionsIntoNTOptions(string options)
+{
+
+}
+
+//
+string convertNTOptionsIntoUnixOptions(string options)
+{
+
 }
 
 //
