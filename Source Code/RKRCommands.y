@@ -138,9 +138,10 @@ command:
     }
     | LS OPTIONS FILE_NAME NEW_LINE
     {
+        const char * fileName = decodeFileName($3).c_str();
         char * aux = strcat(strdup("ls "),$2);
         aux = strcat(aux,strdup(" "));
-        char * command = strcat(aux,$3);
+        char * command = strcat(aux,fileName);
         system(command);
         addRecentCommand(command,&rcomands);
         logCommandToFile(command,logFile);
@@ -167,7 +168,6 @@ command:
     {
         const char * fileName = decodeFileName($2).c_str();
         char * command = strcat(strdup("cd "),fileName);
-        cout << "COMMAND: " << command << endl;
         system(command);
         chdir(fileName);
         addRecentCommand(command,&rcomands);
