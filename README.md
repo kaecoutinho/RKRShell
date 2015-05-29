@@ -16,6 +16,8 @@ _Flex & Bison_ are the major used resources within this project. _C/C++_ is the 
 
 There are <b>two options</b> to run the project.
 
+Keep in mind that [_Boost_ libaries](http://www.boost.org) are needed to generate the **RKRShell**.
+
 #### Building yourself
 
 <ol>

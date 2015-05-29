@@ -1,0 +1,73 @@
+* Started RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:11:34
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:35 - [OK] - Command "help" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:44 - [OK] - Command "exit" executed successfully
+* Ended RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:11:44
+* Started RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:11:48
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:50 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:50 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:53 - [OK] - Command "ls -la" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:55 - [OK] - Command "ls -a" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:56 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:11:57 - [OK] - Command "help" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:12:00 - [OK] - Command "cd" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho] on 29/5/2015 @ 20:12:01 - [OK] - Command "pwd" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho] on 29/5/2015 @ 20:12:03 - [OK] - Command "cd Desktop" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:23 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:26 - [OK] - Command "touch file" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:26 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:29 - [OK] - Command "rm file" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:29 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:34 - [OK] - Command "who" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:36 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:38 - [OK] - Command "ls -l" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:40 - [OK] - Command "ls -l" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:12:53 - [OK] - Command "date" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:02 - [OK] - Command "rcommands" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:06 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:07 - [OK] - Command "exit" executed successfully
+* Ended RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:13:07
+* Started RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:13:13
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:17 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:18 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:19 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:19 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:22 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:26 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:49 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/AUTOMATOS/RKRShell/Source Code] on 29/5/2015 @ 20:13:52 - [OK] - Command "cd" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho] on 29/5/2015 @ 20:13:54 - [OK] - Command "cd Desktop" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:55 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:58 - [OK] - Command "mkdir ricardo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:13:58 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:14:01 - [OK] - Command "cd ricardo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:08 - [OK] - Command "touch arquivo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:08 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:16 - [ERROR] - Error happened: syntax error
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:16 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:32 - [OK] - Command "touch arquivo 2" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:32 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:42 - [OK] - Command "rm arquivo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:42 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:43 - [OK] - Command "rm 2" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:44 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:45 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop/ricardo] on 29/5/2015 @ 20:14:47 - [OK] - Command "cd .." executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:14:47 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:14:52 - [OK] - Command "rm ricardo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:14:56 - [OK] - Command "rm -rf ricardo" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:14:56 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:15:00 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:15:01 - [OK] - Command "pwd" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:15:03 - [OK] - Command "ls" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho/Desktop] on 29/5/2015 @ 20:15:06 - [OK] - Command "cd" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho] on 29/5/2015 @ 20:15:07 - [OK] - Command "clear" executed successfully
+* kaeangelicoutinho [/Users/kaeangelicoutinho] on 29/5/2015 @ 20:20:12 - [OK] - Command "exit" executed successfully
+* Ended RKRShell (V1.0) logged as kaeangelicoutinho on 29/5/2015 @ 20:20:12

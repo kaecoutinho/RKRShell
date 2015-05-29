@@ -168,7 +168,6 @@ command:
     {
         ostringstream command;
         command << ((isCurrentOSWindows()) ? "dir" : "ls");
-        command << "dir";
         executeCommand(command.str());
         showInput();
     }
@@ -183,6 +182,7 @@ command:
     {
         ostringstream command;
         command << ((isCurrentOSWindows()) ? "dir " : "ls ") << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions(string($2))) << " " << decodeFileName($3);
+        cout << command.str();
         executeCommand(command.str());
         showInput();
     }
@@ -618,7 +618,7 @@ void executeCommand(string command)
 {
     if(command.compare(NOT_SUPPORTED_COMMAND) == EQUAL_STRINGS)
     {
-        // ADD NS COMMAND TEXT
+        // YET   
     }
     else if(command.compare("rcommands") == EQUAL_STRINGS)
     {
@@ -628,7 +628,29 @@ void executeCommand(string command)
     }
     else if(command.compare("help") == EQUAL_STRINGS)
     {
-        cout << "YET TO IMPLEMENT" << endl; // ADD HELP TEXT
+        cout << "RKRShell V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << endl << endl;
+        cout << "\t Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda" << endl;
+        cout << "\t GNU GPL V2" << endl << endl;
+        cout << "\t Available actions" << endl;
+        cout << "\t\t ls\t\t->\t List files" << endl;
+        cout << "\t\t dir\t\t->\t List files" << endl;
+        cout << "\t\t cd\t\t->\t Change directory" << endl;
+        cout << "\t\t pwd\t\t->\t Get current directory" << endl;
+        cout << "\t\t mkdir\t\t->\t Make directory" << endl;
+        cout << "\t\t rm\t\t->\t Remove file or directory" << endl;
+        cout << "\t\t del\t\t->\t Remove file or directory" << endl;
+        cout << "\t\t touch\t\t->\t Create new file" << endl;
+        cout << "\t\t date\t\t->\t Show current date" << endl;
+        cout << "\t\t who\t\t->\t Display who is logged in" << endl;
+        cout << "\t\t whois\t\t->\t Display and address domain owner" << endl;
+        cout << "\t\t whoami\t\t->\t Display effective user id" << endl;
+        cout << "\t\t rcommands\t->\t Show recent used commands" << endl;
+        cout << "\t\t help\t\t->\t Show this help menu" << endl;
+        cout << "\t\t version\t->\t Show the current shell's version" << endl;
+        cout << "\t\t clear\t\t->\t Clear output" << endl;
+        cout << "\t\t cls\t\t->\t Clear output" << endl;
+        cout << "\t\t exit\t\t->\t Exit the shell" << endl;
+        cout << "\t\t quit\t\t->\t Exit the shell" << endl;
         addRecentCommand(command,rcomands);
         logCommandToFile(command,logFile);
     }
@@ -655,13 +677,25 @@ void executeCommand(string command)
 //
 string convertUnixOptionsIntoNTOptions(string options)
 {
-
+    ostringstream aux;
+    aux << "/";
+    for(int index = 1; index < options.length(); index++)
+    {
+        aux << options[index];
+    }
+    return aux.str();
 }
 
 //
 string convertNTOptionsIntoUnixOptions(string options)
 {
-
+    ostringstream aux;
+    aux << "-";
+    for(int index = 1; index < options.length(); index++)
+    {
+        aux << options[index];
+    }
+    return aux.str();
 }
 
 //

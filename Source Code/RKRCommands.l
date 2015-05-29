@@ -80,7 +80,7 @@
 									yylval.stringValue = strdup(yytext);
 									return UNIX_OPTIONS;
 								}
-\/-?[a-zA-Z]:?-?[a-zA-Z]?]		{
+\/-?[a-zA-Z]:?-?[a-zA-Z]?		{
 									yylval.stringValue = strdup(yytext);
 									return NT_OPTIONS;
 								}
