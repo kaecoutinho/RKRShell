@@ -70,6 +70,7 @@
     bool isCurrentOSLinux();
     void initializeLogFile(fstream & logFile);
     void logToFile(char * message, fstream & logFile);
+    void logToFile(string message, fstream & logFile);
     void logCommandToFile(char * command, fstream & logFile);
     void logErrorToFile(char * error, fstream & logfile);
     string getCurrentDate();
@@ -340,15 +341,15 @@ command:
     | EXIT NEW_LINE
     {
         char * command = "exit";
-        dealloc();
         logCommandToFile(command,logFile);
+        dealloc();
         return EXIT_SUCCESS;
     }
     | QUIT NEW_LINE
     {
         char * command = "quit";
-        dealloc();
         logCommandToFile(command,logFile);
+        dealloc();
         return EXIT_SUCCESS;
     }
 
@@ -371,26 +372,20 @@ int main(int argumentsCount, char ** argumentsList)
 //
 void setup()
 {
-    char * message;
+    ostringstream message;
     initializeRecentCommands(&rcomands,RCOMANDS_ARRAY_SIZE);
     initializeLogFile(logFile);
-    message = "Started RKRShell logged as ";
-    // message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
-    // message = strcat(message," on ");
-    // message = strcat(message,getCurrentDate().c_str());
-    // logToFile(message,logFile);
+    message << "Started RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
+    logToFile(message.str(),logFile);
 }
 
 //
 void dealloc()
 {
-    char * message;
+    ostringstream message;
     destroyRecentCommands(&rcomands);
-    message = "Ended RKRShell logged as ";
-    // message = strcat(message,getenv(USER_ENVIRONMENT_VARIABLE));
-    // message = strcat(message," on ");
-    // message = strcat(message,getCurrentDate().c_str());
-    // logToFile(message,logFile);
+    message << "Ended RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
+    logToFile(message.str(),logFile);
     logFile.close();
 }
 
@@ -431,7 +426,14 @@ void initializeLogFile(fstream & logFile)
     logFile.open(LOG_FILE_NAME,fstream::out | std::ios_base::app);
 }
 
+//
 void logToFile(char * message, fstream & logFile)
+{
+    logFile << "* " << message << endl;;
+}
+
+//
+void logToFile(string message, fstream & logFile)
 {
     logFile << "* " << message << endl;;
 }
