@@ -11,9 +11,9 @@
     #include <string>
     #include <sstream>
     #include <cstring>
-    #include <regex>
     #include <unistd.h>
     #include <time.h>
+    #include <boost/algorithm/string/replace.hpp>
     #define EXIT_SUCCESS 0
     #define EXIT_ERROR 1
     #define OS_WINDOWS 0
@@ -28,6 +28,7 @@
     #define EMPTY_STRING ""
     #define LOG_FILE_NAME "RKRLog.log"
     #define WHITESPACE_SPECIAL_IDENTIFIER "+_+"
+    #define WHITESPACE_SPECIAL_CHARACTER " "
 
     // OS detection
     #if (defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined __WIN32__ || defined __WINDOWS__)
@@ -163,12 +164,13 @@ command:
     }
     | CD FILE_NAME NEW_LINE
     {
-        char * command = strcat(strdup("cd "),$2);
-        // system(command);
-        // chdir($2);
-        // addRecentCommand(command,&rcomands);
-        // logCommandToFile(command,logFile);
-        cout << "\n\n ENCODED: " << $2 << "\n\n DECODED: " << decodeFileName($2) << endl;
+        const char * fileName = decodeFileName($2).c_str();
+        char * command = strcat(strdup("cd "),fileName);
+        cout << "COMMAND: " << command << endl;
+        system(command);
+        chdir(fileName);
+        addRecentCommand(command,&rcomands);
+        logCommandToFile(command,logFile);
         showInput();
     }
     | PWD NEW_LINE
@@ -550,16 +552,7 @@ void destroyRecentCommands(recentCommands * instance)
 string decodeFileName(char * fileName)
 {
     string aux(fileName);
-    for(size_t position = 0; ; position++)
-    {
-        position = aux.find(WHITESPACE_SPECIAL_IDENTIFIER,position);
-        if(position == string::npos)
-        {
-            break;
-        }
-        aux.erase(position,1);
-        aux.insert(position," ");
-    }
+    boost::replace_all(aux,WHITESPACE_SPECIAL_IDENTIFIER,WHITESPACE_SPECIAL_CHARACTER);
     return aux;
 }
 
