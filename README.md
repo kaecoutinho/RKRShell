@@ -39,5 +39,7 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
 #### Version 1.0
 
 <ul>
-  <li>*</li>
+  <li>Raw RKRShell</li>
+  <li>19 available actions</li>
+  <li>Scalable grammar and recognizer (Flex & Bison)</li>
 </ul>
