@@ -19,58 +19,61 @@
 
 %%
 [ \t]							;
-"ls"							{
+"ls"|"LS"						{
 									return LS;
 								}
 "dir"|"DIR"						{
 									return DIR;
 								}
-"cd"							{
+"cd"|"CD"						{
 									return CD;
 								}
-"pwd"							{
+"pwd"|"PWD"						{
 									return PWD;
 								}
-"mkdir"							{
+"mkdir"|"MKDIR"					{
 									return MKDIR;
 								}
-"rm"							{
+"rm"|"RM"						{
 									return RM;
 								}
-"touch"							{
+"del"|"DEL"						{
+									return DEL;
+								}
+"touch"|"TOUCH"					{
 									return TOUCH;
 								}
 "date"|"DATE"					{
 									return DATE;
 								}
-"who"							{
+"who"|"WHO"						{
 									return WHO;
 								}
-"whois"							{
+"whois"|"WHOIS"					{
 									return WHOIS;
 								}
-"whoami"						{
+"whoami"|"WHOAMI"				{
 									return WHOAMI;
 								}
-"rcommands"						{
+"rcommands"|"RCOMMANDS"			{
 									return RCOMMANDS;
 								}
-"help"							{
+"help"|"HELP"					{
 									return HELP;
 								}	
-"version"						{
+"version"|"VERSION"				{
 									return VERSION;
 								}
-"clear"							{
+"clear"|"CLEAR"					{
 									return CLEAR;
 								}
 "cls"|"CLS"						{
 									return CLS;
 								}
-"exit"							{
+"exit"|"EXIT"					{
 									return EXIT;
 								}
-"quit"							{
+"quit"|"QUIT"					{
 									return QUIT;
 								}
 -[a-zA-Z]+						{

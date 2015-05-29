@@ -21,8 +21,12 @@
     #define OS_LINUX 2
     #define OPERATION_BUFFER_SIZE 256
     #define RKR_SHELL_VERSION 1.0
-    #define USER_ENVIRONMENT_VARIABLE "USER"
-    #define CURRENT_PATH_ENVIRONMENT_VARIABLE "PWD"
+    #define UNIX_USER_ENVIRONMENT_VARIABLE "USER"
+    #define NT_USER_ENVIRONMENT_VARIABLE "USERNAME"
+    #define UNIX_CURRENT_PATH_ENVIRONMENT_VARIABLE "PWD"
+    #define NT_CURRENT_PATH_ENVIRONMENT_VARIABLE "CD"
+    #define UNIX_HOME_DIRECTORY_ENVIRONMENT_VARIABLE "HOME"
+    #define NT_HOME_DIRECTORY_ENVIRONMENT_VARIABLE "USERPROFILE"
     #define RCOMANDS_ARRAY_SIZE 10
     #define EQUAL_STRINGS 0
     #define EMPTY_STRING ""
@@ -106,6 +110,7 @@
 %token PWD
 %token MKDIR
 %token RM
+%token DEL
 %token TOUCH
 %token DATE
 %token WHO
@@ -193,7 +198,8 @@ command:
         ostringstream command;
         command << "cd";
         executeCommand(command.str());
-        chdir(strcat(strdup("/Users/"),getenv(USER_ENVIRONMENT_VARIABLE)));
+        chdir(getenv((((isCurrentOSWindows()) ? NT_HOME_DIRECTORY_ENVIRONMENT_VARIABLE : UNIX_HOME_DIRECTORY_ENVIRONMENT_VARIABLE))));
+        
         showInput();
     }
     | CD FILE_NAME NEW_LINE
@@ -208,14 +214,14 @@ command:
     | PWD NEW_LINE
     {   
         ostringstream command;
-        command << "pwd";
+        command << ((isCurrentOSWindows()) ? "dir" : "pwd");
         executeCommand(command.str());
         showInput();
     }
     | PWD UNIX_OPTIONS NEW_LINE
     {
         ostringstream command;
-        command << "pwd " << $2;
+        command << ((isCurrentOSWindows()) ? "dir" : "pwd ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2);
         executeCommand(command.str());
         showInput();
     }
@@ -229,28 +235,42 @@ command:
     | MKDIR UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "mkdir " << $2 << " " << decodeFileName($3);
+        command << "mkdir" << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
     }
     | RM FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "rm " << decodeFileName($2);
+        command << ((isCurrentOSWindows()) ? "del " : "rm ") << decodeFileName($2);
         executeCommand(command.str());
         showInput();
     }
     | RM UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << "rm " << $2 << " " << decodeFileName($3);
+        command << ((isCurrentOSWindows()) ? "del " : "rm ") << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions(string($2)) : $2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | DEL FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "del " : "rm ") << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | DEL NT_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "del " : "rm ") << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions(string($2))) << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
     }
     | TOUCH FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "touch ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "touch ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2));
         executeCommand(command.str());
         showInput();
     }
@@ -258,7 +278,6 @@ command:
     {
         ostringstream command;
         command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "touch ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
-        command << "touch " << $2 << " " << decodeFileName($3);
         executeCommand(command.str());
         showInput();
     }
@@ -307,7 +326,7 @@ command:
     | WHOIS FILE_NAME NEW_LINE
     {
         ostringstream command;
-        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whois ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whois ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2));
         executeCommand(command.str());
         showInput();
     }
@@ -398,7 +417,7 @@ void setup()
     ostringstream message;
     initializeRecentCommands(rcomands,RCOMANDS_ARRAY_SIZE);
     initializeLogFile(logFile);
-    message << "Started RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
+    message << "Started RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " on " << getCurrentDate();
     logToFile(message.str(),logFile);
     showWelcomeMessage();
     showInput();
@@ -409,7 +428,7 @@ void dealloc()
 {
     ostringstream message;
     destroyRecentCommands(rcomands);
-    message << "Ended RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(USER_ENVIRONMENT_VARIABLE) << " on " << getCurrentDate();
+    message << "Ended RKRShell (V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << ") logged as " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " on " << getCurrentDate();
     logToFile(message.str(),logFile);
     logFile.close();
 }
@@ -418,13 +437,13 @@ void dealloc()
 void showWelcomeMessage()
 {
     cout << "RKRShell V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << endl;
-    cout << "Logged in as: " << getenv(USER_ENVIRONMENT_VARIABLE) << endl;
+    cout << "Logged in as: " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << endl;
 }
 
 //
 void showInput()
 {
-    cout << getenv(USER_ENVIRONMENT_VARIABLE) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] > ";
+    cout << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " @ [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] > ";
 }
 
 //
@@ -472,7 +491,7 @@ void logCommandToFile(char * command, fstream & logFile)
 //
 void logCommandToFile(string command, fstream & logFile)
 {
-    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
+    logFile << "* " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [OK] - Command \"" << command << "\" executed successfully" << endl;
 }
 
 //
@@ -484,7 +503,7 @@ void logErrorToFile(char * error, fstream & logfile)
 //
 void logErrorToFile(string error, fstream & logfile)
 {
-    logFile << "* " << getenv(USER_ENVIRONMENT_VARIABLE) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
+    logFile << "* " << getenv(((isCurrentOSWindows()) ? NT_USER_ENVIRONMENT_VARIABLE : UNIX_USER_ENVIRONMENT_VARIABLE)) << " [" << getcwd(operationBuffer,OPERATION_BUFFER_SIZE) << "] on " << getCurrentDate() << " - [ERROR] - Error happened: " << error << endl;
 }
 
 //
