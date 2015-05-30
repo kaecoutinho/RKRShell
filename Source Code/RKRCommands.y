@@ -199,7 +199,6 @@ command:
         command << "cd";
         executeCommand(command.str());
         chdir(getenv((((isCurrentOSWindows()) ? NT_HOME_DIRECTORY_ENVIRONMENT_VARIABLE : UNIX_HOME_DIRECTORY_ENVIRONMENT_VARIABLE))));
-        
         showInput();
     }
     | CD FILE_NAME NEW_LINE
