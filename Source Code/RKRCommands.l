@@ -55,6 +55,30 @@
 "whoami"|"WHOAMI"				{
 									return WHOAMI;
 								}
+"cp"|"CP"						{
+									return CP;
+								}
+"xcopy"|"XCOPY"					{
+									return XCOPY;
+								}
+"mv"|"MV"						{
+									return MV;
+								}
+"move"|"MOVE"					{
+									return MOVE;
+								}
+"cat"|"CAT"						{
+									return CAT;
+								}
+"type"|"TYPE"					{
+									return TYPE;
+								}
+"rmdir"|"RMDIR"					{
+									return RMDIR;
+								}
+"nano"|"NANO"					{
+									return NANO;
+								}
 "rcommands"|"RCOMMANDS"			{
 									return RCOMMANDS;
 								}
@@ -84,7 +108,7 @@
 									yylval.stringValue = strdup(yytext);
 									return NT_OPTIONS;
 								}
-[a-zA-Z0-9:~_@!-\/\\\.]+		{
+[a-zA-Z0-9*:~_@!-<>\/\\\.]+		{
 									yylval.stringValue = strdup(yytext);
 									return FILE_NAME;
 								}

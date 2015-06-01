@@ -20,7 +20,7 @@
     #define OS_MAC_OS 1
     #define OS_LINUX 2
     #define OPERATION_BUFFER_SIZE 256
-    #define RKR_SHELL_VERSION 1.0
+    #define RKR_SHELL_VERSION 1.1
     #define UNIX_USER_ENVIRONMENT_VARIABLE "USER"
     #define NT_USER_ENVIRONMENT_VARIABLE "USERNAME"
     #define UNIX_CURRENT_PATH_ENVIRONMENT_VARIABLE "PWD"
@@ -116,6 +116,14 @@
 %token WHO
 %token WHOIS
 %token WHOAMI
+%token CP
+%token XCOPY
+%token MV
+%token MOVE
+%token CAT
+%token TYPE
+%token RMDIR
+%token NANO
 %token RCOMMANDS
 %token HELP
 %token VERSION
@@ -340,6 +348,106 @@ command:
     {
         ostringstream command;
         command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "whoami");
+        executeCommand(command.str());
+        showInput();
+    }
+    | CP FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "xcopy " : "cp ") << decodeFileName($2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | CP UNIX_OPTIONS FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "xcopy " : "cp ") << ((isCurrentOSWindows()) ? decodeFileName($3) : $2) << " " << ((isCurrentOSWindows()) ? decodeFileName($4) : decodeFileName($3)) << " " << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions($2) : decodeFileName($4));
+        executeCommand(command.str());
+        showInput();
+    }
+    | XCOPY FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "xcopy " : "cp ") << decodeFileName($2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | XCOPY FILE_NAME FILE_NAME NT_OPTIONS NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "xcopy " : "cp ") << ((isCurrentOSWindows()) ? decodeFileName($2) : convertNTOptionsIntoUnixOptions($4)) << " " << ((isCurrentOSWindows()) ? decodeFileName($3) : decodeFileName($2)) << " " << ((isCurrentOSWindows()) ? $4 : decodeFileName($3));
+        executeCommand(command.str());
+        showInput();
+    }
+    | MV FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "move " : "mv ") << decodeFileName($2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | MV UNIX_OPTIONS FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "move " : "mv ") << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions($2) : $2) << " " << decodeFileName($3) << " " << decodeFileName($4);
+        executeCommand(command.str());
+        showInput();
+    }
+    | MOVE FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "move " : "mv ") << decodeFileName($2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | MOVE NT_OPTIONS FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "move " : "mv ") << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions($2)) << " " << decodeFileName($3) << " " << decodeFileName($4);
+        executeCommand(command.str());
+        showInput();
+    }
+    | CAT FILE_NAME NEW_LINE
+    {
+
+    }
+    | CAT UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+
+    }
+    | TYPE FILE_NAME NEW_LINE
+    {
+
+    }
+    | TYPE UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+
+    }
+    | RMDIR FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << "rmdir " << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();   
+    }
+    | RMDIR UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << "rmdir " << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions($2) : $2) << " " << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | RMDIR NT_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << "rmdir " << ((isCurrentOSWindows()) ? $2 : convertNTOptionsIntoUnixOptions($2)) << " " << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | NANO UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "nano ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         executeCommand(command.str());
         showInput();
     }

@@ -10,7 +10,7 @@ _GNU GPL V2_
 
 **RKRShell** is a _Formal Languages and Automata Theory_ class project which is basically a command-line interpreter that can be executed in both _Unix_ and _Windows_ operating systems.
 
-_Flex & Bison_ are the major used resources within this project. _C/C++_ is the mostly used programming language within this project development.
+_Flex & Bison_ are the major used resources / tools within this project. _C/C++_ is the mostly used programming language within this project development.
 
 ## Usage
 
@@ -35,6 +35,14 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
 </ol>
 
 ## Changelog
+
+#### Version 1.1
+
+<ul>
+  <li>New available actions</li>
+  <li>Bug fixes</li>
+  <li>Code optimization</li>
+</ul>
 
 #### Version 1.0
 
