@@ -124,6 +124,8 @@
 %token TYPE
 %token RMDIR
 %token NANO
+%token GIT
+%token MAN
 %token RCOMMANDS
 %token HELP
 %token VERSION
@@ -409,19 +411,45 @@ command:
     }
     | CAT FILE_NAME NEW_LINE
     {
-
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
+    }
+    | CAT FILE_NAME FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << decodeFileName($2) << " " << decodeFileName($3) << " " << decodeFileName($4); 
+        executeCommand(command.str());
+        showInput();
     }
     | CAT UNIX_OPTIONS FILE_NAME NEW_LINE
     {
-
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << ((isCurrentOSWindows()) ? convertUnixOptionsIntoNTOptions(string($2)) : $2) << " " << decodeFileName($3);
+        executeCommand(command.str());
+        showInput();
+    }
+    | CAT UNIX_OPTIONS FILE_NAME FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << ((isCurrentOSWindows()) ? EMPTY_STRING : (string($2) + " ")) << decodeFileName($3) << " " << decodeFileName($4) << " " << decodeFileName($5); 
+        executeCommand(command.str());
+        showInput();
     }
     | TYPE FILE_NAME NEW_LINE
     {
-
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << decodeFileName($2);
+        executeCommand(command.str());
+        showInput();
     }
-    | TYPE UNIX_OPTIONS FILE_NAME NEW_LINE
+    | TYPE FILE_NAME FILE_NAME FILE_NAME NEW_LINE
     {
-
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? "type " : "cat ") << decodeFileName($2) << " " << decodeFileName($3) << " " << decodeFileName($4); 
+        executeCommand(command.str());
+        showInput();
     }
     | RMDIR FILE_NAME NEW_LINE
     {
@@ -444,10 +472,59 @@ command:
         executeCommand(command.str());
         showInput();
     }
+    | NANO FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "nano ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2));
+        executeCommand(command.str());
+        showInput();
+    }
     | NANO UNIX_OPTIONS FILE_NAME NEW_LINE
     {
         ostringstream command;
         command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "nano ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
+        executeCommand(command.str());
+        showInput();
+    }
+    | GIT FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "git ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2));
+        executeCommand(command.str());
+        showInput();
+    }
+    | GIT FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "git ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2)) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
+        executeCommand(command.str());
+        showInput();
+    }
+    | GIT UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "git ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
+        executeCommand(command.str());
+        showInput();
+    }
+    | GIT UNIX_OPTIONS FILE_NAME FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "git ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3)) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($4));
+        executeCommand(command.str());
+        showInput();
+    }
+    | MAN FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "man ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($2));
+        executeCommand(command.str());
+        showInput();
+    }
+    | MAN UNIX_OPTIONS FILE_NAME NEW_LINE
+    {
+        ostringstream command;
+        command << ((isCurrentOSWindows()) ? NOT_SUPPORTED_COMMAND : "man ") << ((isCurrentOSWindows()) ? EMPTY_STRING : $2) << ((isCurrentOSWindows()) ? EMPTY_STRING : " ") << ((isCurrentOSWindows()) ? EMPTY_STRING : decodeFileName($3));
         executeCommand(command.str());
         showInput();
     }
@@ -725,7 +802,7 @@ void executeCommand(string command)
 {
     if(command.compare(NOT_SUPPORTED_COMMAND) == EQUAL_STRINGS)
     {
-        // YET   
+        cout << "The requested command can not be executed on the current system (" << ((isCurrentOSWindows()) ? "Windows" : ((isCurrentOSMacOS()) ? "MacOS" : ((isCurrentOSLinux()) ? "Linux" : "Unrecognized system"))) << ")" << endl;
     }
     else if(command.compare("rcommands") == EQUAL_STRINGS)
     {
@@ -759,6 +836,8 @@ void executeCommand(string command)
         cout << "\t\t type\t\t->\t Concatenate and print files" << endl;
         cout << "\t\t rmdir\t\t->\t Remove directory" << endl;
         cout << "\t\t nano\t\t->\t Nano text editor" << endl;
+        cout << "\t\t git\t\t->\t Git content tracker" << endl;
+        cout << "\t\t man\t\t->\t Format and display the on-line manual pages" << endl;
         cout << "\t\t rcommands\t->\t Show recent used commands" << endl;
         cout << "\t\t help\t\t->\t Show this help menu" << endl;
         cout << "\t\t version\t->\t Show the current shell's version" << endl;

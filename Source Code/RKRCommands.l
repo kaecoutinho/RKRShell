@@ -79,6 +79,12 @@
 "nano"|"NANO"					{
 									return NANO;
 								}
+"git"|"GIT"						{
+									return GIT;
+								}
+"man"|"MAN"						{
+									return MAN;
+								}
 "rcommands"|"RCOMMANDS"			{
 									return RCOMMANDS;
 								}
