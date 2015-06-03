@@ -751,6 +751,14 @@ void executeCommand(string command)
         cout << "\t\t who\t\t->\t Display who is logged in" << endl;
         cout << "\t\t whois\t\t->\t Display and address domain owner" << endl;
         cout << "\t\t whoami\t\t->\t Display effective user id" << endl;
+        cout << "\t\t cp\t\t->\t Copy files" << endl;
+        cout << "\t\t xcopy\t\t->\t Copy files" << endl;
+        cout << "\t\t mv\t\t->\t Move files" << endl;
+        cout << "\t\t move\t\t->\t Move files" << endl;
+        cout << "\t\t cat\t\t->\t Concatenate and print files" << endl;
+        cout << "\t\t type\t\t->\t Concatenate and print files" << endl;
+        cout << "\t\t rmdir\t\t->\t Remove directory" << endl;
+        cout << "\t\t nano\t\t->\t Nano text editor" << endl;
         cout << "\t\t rcommands\t->\t Show recent used commands" << endl;
         cout << "\t\t help\t\t->\t Show this help menu" << endl;
         cout << "\t\t version\t->\t Show the current shell's version" << endl;
