@@ -21,17 +21,17 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
 #### Building yourself
 
 <ol>
-  <li>Open the <i>Source Code</i> folder</li>
-  <li>Run the <i>BuildRKRShell.sh</i> script</li>
-  <li>Execute the <i>RKRShell(.exe)</i> binary</li>
+  <li>Open the <i>[Source Code](https://github.com/kaiky25/RKRShell/tree/master/Source%20Code)</i> folder</li>
+  <li>Run the <i>[BuildRKRShell.sh](https://github.com/kaiky25/RKRShell/blob/master/Source%20Code/BuildRKRShell.sh)</i> script</li>
+  <li>Execute the <i>RKRShell(.exe, for Windows users)</i> binary</li>
 </ol>
 
 #### Executing the already built binary
 
 <ol>
-  <li>Open the <i>Executables</i> folder</li>
+  <li>Open the <i>[Executables](https://github.com/kaiky25/RKRShell/tree/master/Executables)</i> folder</li>
   <li>Open the desired O.S. folder among all</li>
-  <li>Execute the <i>RKRShell(.exe)</i> binary</li>
+  <li>Execute the <i>RKRShell(.exe, for Windows users)</i> binary</li>
 </ol>
 
 ## Changelog
