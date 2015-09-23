@@ -22,7 +22,8 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
 
 <ol>
   <li>Open the <i><a href="https://github.com/kaiky25/RKRShell/tree/master/Source%20Code">Source Code</a></i> folder</li>
-  <li>Run the <i><a href="https://github.com/kaiky25/RKRShell/blob/master/Source%20Code/BuildRKRShell.sh">BuildRKRShell.sh</a></i> script</li>
+  <li>Run __make__ command</li>
+  <li>Optionally run __make clean__ command to clean unnecessary files</li>
   <li>Execute the <i>RKRShell(.exe, for Windows users)</i> binary</li>
 </ol>
 
