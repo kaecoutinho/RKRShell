@@ -24,7 +24,7 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
   <li>Open the <i><a href="https://github.com/kaiky25/RKRShell/tree/master/Source%20Code">Source Code</a></i> folder</li>
   <li>Run <i>make</i> command</li>
   <li>Optionally run <i>make clean</i> command to clean unnecessary files</li>
-  <li>Execute the <i>RKRShell(.exe, for Windows users)</i> binary</li>
+  <li>Execute the <i>RKRShell</i>(.exe, for Windows users) binary</li>
 </ol>
 
 #### Executing the already built binary
@@ -32,7 +32,7 @@ Keep in mind that [_Boost_](http://www.boost.org) libraries are needed to genera
 <ol>
   <li>Open the <i><a href="https://github.com/kaiky25/RKRShell/tree/master/Executables">Executables</a></i> folder</li>
   <li>Open the desired O.S. folder among all</li>
-  <li>Execute the <i>RKRShell(.exe, for Windows users)</i> binary</li>
+  <li>Execute the <i>RKRShell</i>(.exe, for Windows users) binary</li>
 </ol>
 
 ## Changelog
