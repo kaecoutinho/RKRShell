@@ -8,7 +8,7 @@
 PREFIX = RKRCommands
 OBJECTS = lex.yy.o lex.yy.c $(PREFIX).tab.o $(PREFIX).tab.c $(PREFIX).tab.h *.log
 CC = g++
-CFLAGS = -w
+CFLAGS = -w -I/usr/local/Cellar/boost/1.58.0/include/ -L/usr/local/
 LDFLAGS = -ll
 LEX = flex
 YACC = bison
