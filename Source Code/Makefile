@@ -46,4 +46,4 @@ clean:
 	rm -rf $(OBJECTS)
 
 cleanall:
-	rm -rf $(OBJECTS) $(PREFIX) 
+	rm -rf $(OBJECTS) $(OUTPUT)
