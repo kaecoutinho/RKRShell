@@ -10,7 +10,7 @@ _GNU GPL V2_
 
 **RKRShell** is a _Formal Languages and Automata Theory_ class project which is basically a command-line interpreter that can be executed in both _Unix_ and _Windows_ operating systems.
 
-_Flex_ & _Bison_ are the major used resources / tools within this project. _C/C++_ is the mostly used programming language within this project development.
+_Flex_ and _Bison_ are the major used resources / tools within this project. _C/C++_ is the mostly used programming language within this project development.
 
 ## Usage
 
