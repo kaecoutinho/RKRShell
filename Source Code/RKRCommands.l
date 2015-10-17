@@ -2,7 +2,7 @@
 	// RKRCommands.l
 	// RKRShell
 	// Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda
-	// GNU GPL V2
+	// MIT license
 
     #include <cstdio>
     #include <iostream>
