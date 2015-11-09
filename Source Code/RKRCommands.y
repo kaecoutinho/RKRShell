@@ -813,7 +813,7 @@ void executeCommand(string command)
     else if(command.compare("help") == EQUAL_STRINGS)
     {
         cout << "RKRShell V" << fixed << setw(2) << setprecision(1) << RKR_SHELL_VERSION << endl << endl;
-        cout << "\t Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda" << endl;
+        cout << "\t Created by Kaê Angeli Coutinho" << endl;
         cout << "\t GNU GPL V2" << endl << endl;
         cout << "\t Available actions" << endl;
         cout << "\t\t ls\t\t->\t List files" << endl;
