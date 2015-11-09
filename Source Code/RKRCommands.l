@@ -1,7 +1,7 @@
 %{
 	// RKRCommands.l
 	// RKRShell
-	// Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda
+	// Created by Kaê Angeli Coutinho
 	// MIT license
 
     #include <cstdio>
