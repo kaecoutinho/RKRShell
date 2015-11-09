@@ -2,7 +2,7 @@
 
 **RKRShell**'s repository
 
-Created by Kaê Angeli Coutinho, Ricardo Oliete Ogata and Rafael Hieda
+Created by Kaê Angeli Coutinho
 
 _MIT license_
 
